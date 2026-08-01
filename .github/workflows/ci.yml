@@ -1,0 +1,49 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  lint:
+    name: Code Quality & Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo, pdo_mysql, json
+          tools: phpcs
+
+      - name: PHP Syntax Check (Lint)
+        run: |
+          find . -name "*.php" -print0 | xargs -0 -n1 php -l
+
+      - name: Check Security Standards (Pattern Match)
+        run: |
+          echo "Checking for raw SQL concatenation..."
+          if grep -rni "SELECT .*'" ./api ./auth ./farmer ./business ./admin; then
+            echo "::error::Possible raw SQL concatenation found. Use PDO prepared statements."
+            exit 1
+          fi
+          
+          echo "Checking for raw $_POST assignments..."
+          if grep -rni "\$[^_].* = \$_POST" ./api ./auth ./farmer ./business ./admin; then
+            echo "::warning::Direct \$_POST assignment found. Ensure inputs are sanitized with htmlspecialchars()."
+          fi
+
+      - name: Verify Authentication Checks
+        run: |
+          echo "Checking for missing auth checks in protected directories..."
+          for file in $(find ./farmer ./business ./admin -name "*.php"); do
+            if ! grep -q "auth_check.php" "$file"; then
+              echo "::warning file=$file::Missing auth_check.php inclusion in protected file."
+            fi
+          done
