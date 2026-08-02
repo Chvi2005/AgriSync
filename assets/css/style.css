@@ -201,6 +201,37 @@ h3 { font-size: 1.25rem; }
     box-shadow: var(--shadow-lg);
     border: none;
     backdrop-filter: blur(8px);
+    animation: slideInRight 0.35s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    overflow: hidden;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.toast-theme-success {
+    background-color: #D1E7DD !important;
+    border-left: 5px solid #2D6A4F !important;
+    color: #0F5132 !important;
+}
+
+.toast-theme-error, .toast-theme-danger {
+    background-color: #F8D7DA !important;
+    border-left: 5px solid #DC3545 !important;
+    color: #842029 !important;
+}
+
+.toast-theme-info {
+    background-color: #CFF4FC !important;
+    border-left: 5px solid #0DCAF0 !important;
+    color: #055160 !important;
 }
 
 /* Empty State Component */
