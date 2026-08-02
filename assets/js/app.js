@@ -232,6 +232,41 @@ function pollNotifications(endpoint = '/api/notifications.php', onReceive = null
     }, intervalMs);
 }
 
+/**
+ * Render reusable empty state HTML string for client-side dynamic lists
+ * 
+ * @param {string} title 
+ * @param {string} description 
+ * @param {string} icon 
+ * @param {string|null} btnText 
+ * @param {string|null} btnTarget Modal ID starting with '#' or link URL
+ * @returns {string}
+ */
+function renderEmptyStateHTML(title, description = '', icon = 'bi-inbox', btnText = null, btnTarget = null) {
+    let btnHtml = '';
+    if (btnText && btnTarget) {
+        const isModal = btnTarget.startsWith('#');
+        if (isModal) {
+            btnHtml = `<div class="empty-state-action"><button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="${escapeHtml(btnTarget)}"><i class="bi bi-plus-lg me-1"></i>${escapeHtml(btnText)}</button></div>`;
+        } else {
+            btnHtml = `<div class="empty-state-action"><a href="${escapeHtml(btnTarget)}" class="btn btn-primary shadow-sm"><i class="bi bi-plus-lg me-1"></i>${escapeHtml(btnText)}</a></div>`;
+        }
+    }
+
+    const descHtml = description ? `<p class="empty-state-description mb-3">${escapeHtml(description)}</p>` : '';
+
+    return `
+        <div class="empty-state py-5 text-center">
+            <div class="empty-state-icon-wrapper mx-auto">
+                <i class="bi ${escapeHtml(icon)}"></i>
+            </div>
+            <h5 class="empty-state-title">${escapeHtml(title)}</h5>
+            ${descHtml}
+            ${btnHtml}
+        </div>
+    `;
+}
+
 // Auto-initialize Bootstrap components on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
     // Tooltips

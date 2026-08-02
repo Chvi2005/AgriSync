@@ -72,7 +72,12 @@ try {
                     <tbody>
                         <?php if (empty($matches)): ?>
                             <tr>
-                                <td colspan="8" class="text-center py-4 text-muted">No harvest matches generated yet. Submit a pre-order request to trigger automated matching.</td>
+                                <td colspan="8" class="p-0">
+                                    <?php 
+                                    require_once __DIR__ . '/../includes/empty_state.php';
+                                    echo renderEmptyState('No matched produce yet', 'Submit a pre-order request to trigger automated farmer yield matching.', 'bi-shop-window', 'Submit Pre-Order', APP_URL . '/business/requests.php'); 
+                                    ?>
+                                </td>
                             </tr>
                         <?php else: ?>
                             <?php foreach ($matches as $m): ?>

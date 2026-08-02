@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.success) {
                 const listings = data.data.listings || [];
                 if (listings.length === 0) {
-                    listingsTbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">No harvest listings match the selected filter.</td></tr>`;
+                    listingsTbody.innerHTML = `<tr><td colspan="7" class="p-0">${renderEmptyStateHTML('No harvest listings yet', 'List your expected yield to start receiving automated business buyer pre-order matches.', 'bi-box-seam', 'Add Harvest Listing', '#addListingModal')}</td></tr>`;
                     return;
                 }
 

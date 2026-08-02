@@ -259,14 +259,44 @@ h3 { font-size: 1.25rem; }
     backdrop-filter: blur(8px);
 }
 
-/* Empty State Component */
+/* Reusable Empty State Component */
 .empty-state {
-    padding: 3rem 1.5rem;
+    padding: 3.5rem 1.5rem;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.empty-state-icon {
-    font-size: 3rem;
+.empty-state-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--clr-accent-light);
+    color: var(--clr-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    font-size: 2.25rem;
+    box-shadow: 0 4px 12px rgba(45, 106, 79, 0.12);
+}
+
+.empty-state-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--clr-primary-dark);
+    margin-bottom: 0.5rem;
+}
+
+.empty-state-description {
+    font-size: 0.9rem;
     color: var(--clr-text-muted);
-    margin-bottom: 1rem;
+    max-width: 420px;
+    margin-bottom: 1.25rem;
+}
+
+.empty-state-action {
+    margin-top: 0.5rem;
 }
