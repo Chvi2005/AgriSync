@@ -1,5 +1,10 @@
 -- AgriSync Core Database Schema
 -- Follows strict guidelines: snake_case, plural tables, standard timestamps, foreign keys with cascade
+CREATE DATABASE IF NOT EXISTS `agrisync`
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
+USE `agrisync`;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
