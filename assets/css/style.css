@@ -234,6 +234,61 @@ h3 { font-size: 1.25rem; }
     color: #055160 !important;
 }
 
+/* Custom AgriSync Bootstrap Table Styling */
+.table-responsive {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--clr-border);
+    background-color: var(--clr-surface);
+}
+
+.table {
+    margin-bottom: 0;
+    width: 100%;
+    vertical-align: middle;
+}
+
+/* Custom Header Row with Primary-Dark Background */
+.table thead, .table thead tr, .table thead th {
+    background-color: var(--clr-primary-dark) !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.875rem 1rem;
+    border-bottom: none;
+}
+
+/* Table Body Row Hover Effects */
+.table tbody tr {
+    transition: var(--transition-fast);
+}
+
+.table tbody tr:hover, .table-hover tbody tr:hover {
+    background-color: rgba(216, 243, 220, 0.4) !important;
+}
+
+.table tbody td {
+    padding: 0.875rem 1rem;
+    color: var(--clr-text);
+    border-bottom: 1px solid var(--clr-border);
+    font-size: 0.925rem;
+}
+
+/* Responsive Table Mobile Optimization */
+@media (max-width: 767.98px) {
+    .table-responsive {
+        border-radius: var(--radius-sm);
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .table tbody td, .table thead th {
+        white-space: nowrap;
+    }
+}
+
 /* Empty State Component */
 .empty-state {
     padding: 3rem 1.5rem;
