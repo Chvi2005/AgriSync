@@ -14,8 +14,7 @@ function getDbConnection() {
 
         return new PDO($dsn, DB_USER, DB_PASS, $options);
     } catch (PDOException $e) {
-        // Do not expose raw PHP errors to users. Log it and show generic message.
-        // error_log($e->getMessage()); 
-        die("Database connection failed. Please try again later.");
+        error_log("Database connection error: " . $e->getMessage());
+        throw new RuntimeException("Database connection failed. Please check database configuration.");
     }
 }

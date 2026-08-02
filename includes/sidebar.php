@@ -1,6 +1,8 @@
 <?php
-// AgriSync Shared Dashboard Sidebar Component (TASK-013 / M3 Role-Based Navigation)
-// Usage: Included within standard grid <div class="col-md-3 col-lg-2 d-md-block sidebar collapse" id="sidebarMenu">
+/**
+ * AgriSync — Unified Role-Based Sidebar Navigation Component (TASK-013 / TASK-026)
+ * Supports Farmer, Commercial Buyer, and Admin portals with active states and dark styling.
+ */
 
 if (session_status() === PHP_SESSION_NONE) {
     require_once __DIR__ . '/../config/session.php';
@@ -10,12 +12,15 @@ if (!function_exists('getUserRole')) {
 }
 
 $user_role = getUserRole();
+$user_name = $_SESSION['user_name'] ?? 'User';
 $app_url = defined('APP_URL') ? APP_URL : '';
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse shadow-sm">
     <div class="position-sticky pt-3">
+        
+        <!-- User Role Header -->
         <div class="px-3 mb-2 sidebar-header text-uppercase">
             <?= htmlspecialchars(ucfirst((string)$user_role), ENT_QUOTES, 'UTF-8') ?> Portal
         </div>
@@ -29,13 +34,20 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= $current_page === 'listings.php' ? 'active' : '' ?>" href="<?= $app_url ?>/farmer/listings.php">
+                    <a class="nav-link <?= in_array($current_page, ['listings.php', 'add_listing.php', 'edit_listing.php'], true) ? 'active' : '' ?>" href="<?= $app_url ?>/farmer/listings.php">
                         <i class="bi bi-box-seam"></i>
-                        <span>My Listings</span>
+                        <span>My Harvests</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= $current_page === 'orders.php' ? 'active' : '' ?>" href="<?= $app_url ?>/farmer/orders.php">
+                    <a class="nav-link <?= $current_page === 'ai_insights.php' ? 'active' : '' ?>" href="<?= $app_url ?>/farmer/ai_insights.php">
+                        <i class="bi bi-magic text-warning"></i>
+                        <span>AI Forecasts</span>
+                        <span class="badge bg-success ms-auto extra-small">AI</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= $current_page === 'offers.php' ? 'active' : '' ?>" href="<?= $app_url ?>/farmer/offers.php">
                         <i class="bi bi-tags"></i>
                         <span>Incoming Offers</span>
                     </a>
@@ -43,25 +55,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <li class="nav-item">
                     <a class="nav-link <?= $current_page === 'orders.php' ? 'active' : '' ?>" href="<?= $app_url ?>/farmer/orders.php">
                         <i class="bi bi-cart-check"></i>
-                        <span>My Orders</span>
+                        <span>Completed Orders</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= $app_url ?>/farmer/dashboard.php#ai-insights">
-                        <i class="bi bi-lightbulb"></i>
-                        <span>AI Insights</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)" data-bs-toggle="dropdown" data-bs-target="#notifDropdownBtn">
-                        <i class="bi bi-bell"></i>
-                        <span>Notifications</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)" data-bs-toggle="dropdown" data-bs-target="#userProfileDropdown">
+                    <a class="nav-link <?= $current_page === 'profile.php' ? 'active' : '' ?>" href="<?= $app_url ?>/farmer/profile.php">
                         <i class="bi bi-person-circle"></i>
-                        <span>Profile</span>
+                        <span>Farm Profile</span>
                     </a>
                 </li>
 
@@ -73,33 +73,28 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= $current_page === 'requests.php' ? 'active' : '' ?>" href="<?= $app_url ?>/business/requests.php">
-                        <i class="bi bi-search"></i>
-                        <span>Browse Produce</span>
+                    <a class="nav-link <?= in_array($current_page, ['marketplace.php', 'place_order.php'], true) ? 'active' : '' ?>" href="<?= $app_url ?>/business/marketplace.php">
+                        <i class="bi bi-shop"></i>
+                        <span>Produce Market</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link <?= $current_page === 'matches.php' ? 'active' : '' ?>" href="<?= $app_url ?>/business/matches.php">
+                        <i class="bi bi-cpu text-warning"></i>
+                        <span>AI Broker Deals</span>
+                        <span class="badge bg-primary ms-auto extra-small">AI</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= in_array($current_page, ['orders.php', 'tracking.php'], true) ? 'active' : '' ?>" href="<?= $app_url ?>/business/orders.php">
                         <i class="bi bi-bag-check"></i>
-                        <span>My Orders</span>
+                        <span>Procurement Orders</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= $current_page === 'matches.php' ? 'active' : '' ?>" href="<?= $app_url ?>/business/matches.php">
-                        <i class="bi bi-cpu"></i>
-                        <span>AI Matches</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)" data-bs-toggle="dropdown" data-bs-target="#notifDropdownBtn">
-                        <i class="bi bi-bell"></i>
-                        <span>Notifications</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0)" data-bs-toggle="dropdown" data-bs-target="#userProfileDropdown">
-                        <i class="bi bi-person-circle"></i>
-                        <span>Profile</span>
+                    <a class="nav-link <?= $current_page === 'profile.php' ? 'active' : '' ?>" href="<?= $app_url ?>/business/profile.php">
+                        <i class="bi bi-building"></i>
+                        <span>Company Profile</span>
                     </a>
                 </li>
 
@@ -123,19 +118,20 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= $app_url ?>/admin/dashboard.php#agent-monitor">
-                        <i class="bi bi-robot"></i>
+                    <a class="nav-link <?= $current_page === 'agent_logs.php' ? 'active' : '' ?>" href="<?= $app_url ?>/admin/agent_logs.php">
+                        <i class="bi bi-robot text-warning"></i>
                         <span>AI Agent Monitor</span>
+                        <span class="badge bg-warning text-dark ms-auto extra-small">Live</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= $app_url ?>/admin/dashboard.php#analytics">
-                        <i class="bi bi-graph-up"></i>
-                        <span>Analytics</span>
+                    <a class="nav-link <?= $current_page === 'sdg_impact.php' ? 'active' : '' ?>" href="<?= $app_url ?>/admin/sdg_impact.php">
+                        <i class="bi bi-globe-americas text-success"></i>
+                        <span>SDG Impact</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= $app_url ?>/admin/dashboard.php#settings">
+                    <a class="nav-link <?= $current_page === 'settings.php' ? 'active' : '' ?>" href="<?= $app_url ?>/admin/settings.php">
                         <i class="bi bi-gear"></i>
                         <span>Settings</span>
                     </a>
@@ -145,6 +141,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
         <hr class="mx-3 my-3 text-white-50 opacity-25">
 
+        <!-- Quick Branding Badge -->
         <div class="px-3 pb-3">
             <div class="p-3 bg-black bg-opacity-25 rounded-3 text-center border border-white-50 border-opacity-10">
                 <div class="fw-bold text-white extra-small mb-1"><i class="bi bi-sprout text-accent me-1"></i>AgriSync Sri Lanka</div>

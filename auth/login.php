@@ -1,73 +1,75 @@
 <?php
-// AgriSync Login Page - Milestone 3 (M3)
+/**
+ * AgriSync — User Login Page (TASK-016)
+ * Secure authentication gateway for Farmers, Commercial Buyers, and Admins.
+ */
+
 require_once __DIR__ . '/../config/session.php';
+require_once __DIR__ . '/../config/constants.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../includes/functions.php';
 
-$page_title = 'Sign In';
-$error_message = '';
-
-// If user is already logged in, redirect immediately to their role dashboard
-if (isLoggedIn()) {
-    $role = getUserRole();
+// Redirect if already authenticated
+if (!empty($_SESSION['user_id']) && !empty($_SESSION['user_role'])) {
+    $role = $_SESSION['user_role'];
     $app_url = defined('APP_URL') ? APP_URL : '';
-    $target = match ($role) {
-        'farmer'   => $app_url . '/farmer/dashboard.php',
+    $dest = match($role) {
+        'farmer' => $app_url . '/farmer/dashboard.php',
         'business' => $app_url . '/business/dashboard.php',
-        'admin'    => $app_url . '/admin/dashboard.php',
-        default    => $app_url . '/index.php',
+        'admin' => $app_url . '/admin/dashboard.php',
+        default => $app_url . '/index.php'
     };
-    header("Location: " . $target);
-    exit;
+    redirect($dest);
 }
 
-// Handle Direct Server-Side POST Form Submission
+$page_title = 'Login';
+$error = '';
+$email_val = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $csrf_token = $_POST['csrf_token'] ?? '';
-    
-    if (!validateCSRFToken($csrf_token)) {
-        $error_message = 'CSRF security token validation failed. Please refresh and try again.';
+    $email_val = sanitize($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $csrf = $_POST['csrf_token'] ?? '';
+
+    if (!validateCSRFToken($csrf)) {
+        $error = 'Security validation failed. Please try again.';
+    } elseif (empty($email_val) || empty($password)) {
+        $error = 'Please enter both your email and password.';
     } else {
-        $email = filter_var(trim($_POST['email'] ?? ''), FILTER_VALIDATE_EMAIL);
-        $password = trim($_POST['password'] ?? '');
+        try {
+            $db = getDbConnection();
+            $stmt = $db->prepare("SELECT id, name, email, password_hash, role, district, phone, is_active FROM users WHERE email = :email LIMIT 1");
+            $stmt->execute([':email' => $email_val]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$email || empty($password)) {
-            $error_message = 'Invalid email or password';
-        } else {
-            try {
-                $db = getDbConnection();
-                $stmt = $db->prepare("SELECT id, name, email, password_hash, role, phone, district, is_active FROM users WHERE email = ? LIMIT 1");
-                $stmt->execute([$email]);
-                $user = $stmt->fetch();
-
-                if ($user && password_verify($password, $user['password_hash'])) {
-                    if ((int)$user['is_active'] !== 1) {
-                        $error_message = 'Your account has been deactivated. Please contact support.';
-                    } else {
-                        // Set session variables
-                        $_SESSION['user_id']       = (int)$user['id'];
-                        $_SESSION['user_name']     = sanitize($user['name']);
-                        $_SESSION['user_email']    = sanitize($user['email']);
-                        $_SESSION['user_role']     = sanitize($user['role']);
-                        $_SESSION['user_district'] = sanitize($user['district']);
-
-                        $app_url = defined('APP_URL') ? APP_URL : '';
-                        $redirect_target = match ($user['role']) {
-                            'farmer'   => $app_url . '/farmer/dashboard.php',
-                            'business' => $app_url . '/business/dashboard.php',
-                            'admin'    => $app_url . '/admin/dashboard.php',
-                            default    => $app_url . '/index.php',
-                        };
-
-                        header("Location: " . $redirect_target);
-                        exit;
-                    }
+            if ($user && password_verify($password, $user['password_hash'])) {
+                if (isset($user['is_active']) && (int)$user['is_active'] === 0) {
+                    $error = 'Your account has been deactivated. Please contact platform support.';
                 } else {
-                    $error_message = 'Invalid email or password';
+                    // Set session data
+                    $_SESSION['user_id'] = (int) $user['id'];
+                    $_SESSION['user_name'] = $user['name'];
+                    $_SESSION['user_email'] = $user['email'];
+                    $_SESSION['user_role'] = $user['role'];
+                    $_SESSION['user_district'] = $user['district'] ?? 'Dambulla';
+                    $_SESSION['user_phone'] = $user['phone'] ?? '';
+                    $_SESSION['last_activity'] = time();
+
+                    $app_url = defined('APP_URL') ? APP_URL : '';
+                    $target = match($user['role']) {
+                        'farmer' => $app_url . '/farmer/dashboard.php',
+                        'business' => $app_url . '/business/dashboard.php',
+                        'admin' => $app_url . '/admin/dashboard.php',
+                        default => $app_url . '/index.php'
+                    };
+                    redirect($target);
                 }
-            } catch (PDOException $e) {
-                $error_message = 'A database error occurred. Please try again later.';
+            } else {
+                $error = 'Invalid email address or password.';
             }
+        } catch (Throwable $e) {
+            error_log("Login Error: " . $e->getMessage());
+            $error = 'Authentication system temporarily unavailable.';
         }
     }
 }
@@ -75,173 +77,99 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require_once __DIR__ . '/../includes/header.php';
 ?>
 
-<div class="container-fluid p-0 min-vh-100 d-flex flex-column justify-content-center bg-light">
-    <div class="row g-0 min-vh-100">
-        <!-- Left Column: Branding & Platform Feature Showcase (Split-Screen) -->
-        <div class="col-lg-6 d-none d-lg-flex flex-column justify-content-between p-5 text-white" style="background: linear-gradient(135deg, #1B4332 0%, #2D6A4F 60%, #40916C 100%);">
-            <div>
-                <a href="<?= APP_URL ?>" class="d-inline-flex align-items-center gap-3 text-decoration-none text-white mb-4">
-                    <span class="bg-white text-primary rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px;">
-                        <i class="bi bi-sprout fs-3"></i>
-                    </span>
-                    <span class="fs-2 fw-bold tracking-tight">AgriSync</span>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-5">
+            
+            <div class="text-center mb-4">
+                <a href="../index.php" class="d-inline-flex align-items-center text-decoration-none mb-2">
+                    <span class="fs-2">🌾</span>
+                    <span class="fs-3 fw-bold text-success ms-2"><?= APP_NAME ?></span>
                 </a>
+                <h4 class="fw-bold text-dark mb-1">Sign in to your account</h4>
+                <p class="text-muted small">Enter your credentials to access the agricultural marketplace</p>
             </div>
 
-            <div class="my-auto py-5">
-                <span class="badge bg-accent-light text-dark fw-bold px-3 py-2 mb-3 rounded-pill text-uppercase extra-small">AI-Powered B2B Marketplace</span>
-                <h1 class="display-5 fw-bold mb-3">Connecting Sri Lankan Agriculture Directly</h1>
-                <p class="lead text-white-50 mb-4" style="max-width: 520px;">
-                    Empowering farmers with automated yield matching and direct access to supermarkets, restaurants, and commercial grocers.
-                </p>
-
-                <div class="row g-3 mt-4">
-                    <div class="col-sm-6">
-                        <div class="p-3 rounded-3 bg-white bg-opacity-10 border border-white border-opacity-10">
-                            <i class="bi bi-graph-up-arrow fs-4 mb-2 text-accent"></i>
-                            <h6 class="fw-bold text-white mb-1">Fair Trade Pricing</h6>
-                            <p class="small text-white-50 mb-0">Eliminate middleman margins and maximize farm profits.</p>
-                        </div>
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                
+                <?php if (!empty($error)): ?>
+                    <div class="alert alert-danger rounded-3 py-2 px-3 small d-flex align-items-center mb-3">
+                        <i class="bi bi-exclamation-circle-fill me-2 fs-5"></i>
+                        <div><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="p-3 rounded-3 bg-white bg-opacity-10 border border-white border-opacity-10">
-                            <i class="bi bi-cpu fs-4 mb-2 text-accent"></i>
-                            <h6 class="fw-bold text-white mb-1">Automated Matching</h6>
-                            <p class="small text-white-50 mb-0">Direct buyer order matching based on proximity & demand.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-flex align-items-center justify-content-between text-white-50 extra-small pt-3 border-top border-white border-opacity-10">
-                <span>&copy; <?= date('Y') ?> AgriSync Platform. All rights reserved.</span>
-                <span>AIESEC Idealize 2026</span>
-            </div>
-        </div>
-
-        <!-- Right Column: Login Form Interface -->
-        <div class="col-lg-6 d-flex align-items-center justify-content-center p-4 p-sm-5 bg-white">
-            <div class="w-100" style="max-width: 440px;">
-                <!-- Mobile Logo Header -->
-                <div class="text-center mb-4 d-lg-none">
-                    <a href="<?= APP_URL ?>" class="text-decoration-none d-inline-flex align-items-center gap-2">
-                        <span class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
-                            <i class="bi bi-sprout fs-3"></i>
-                        </span>
-                        <span class="h3 fw-bold text-dark mb-0">AgriSync</span>
-                    </a>
-                </div>
-
-                <div class="mb-4">
-                    <h2 class="fw-bold text-dark mb-1">Welcome Back</h2>
-                    <p class="text-muted small">Sign in with your registered email and password to access your portal</p>
-                </div>
-
-                <!-- Server-Side Error Alert -->
-                <?php if (!empty($error_message)): ?>
-                    <div id="loginAlert" class="alert alert-danger d-flex align-items-center gap-2 rounded-3 mb-4" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill fs-5"></i>
-                        <div><?= htmlspecialchars($error_message, ENT_QUOTES, 'UTF-8') ?></div>
-                    </div>
-                <?php else: ?>
-                    <div id="loginAlert" class="alert alert-danger d-none rounded-3 mb-4" role="alert"></div>
                 <?php endif; ?>
 
-                <form id="loginForm" method="POST" action="<?= htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8') ?>">
+                <?php if (isset($_GET['registered'])): ?>
+                    <div class="alert alert-success rounded-3 py-2 px-3 small d-flex align-items-center mb-3">
+                        <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                        <div>Registration successful! You can now log in.</div>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($_GET['logged_out'])): ?>
+                    <div class="alert alert-info rounded-3 py-2 px-3 small d-flex align-items-center mb-3">
+                        <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+                        <div>You have been safely logged out.</div>
+                    </div>
+                <?php endif; ?>
+
+                <form method="POST" action="login.php" novalidate>
                     <input type="hidden" name="csrf_token" value="<?= generateCSRFToken() ?>">
-                    
+
                     <div class="mb-3">
-                        <label for="email" class="form-label fw-semibold text-dark small">Email Address</label>
+                        <label for="emailInput" class="form-label small fw-semibold text-muted">Email Address</label>
                         <div class="input-group">
-                            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-envelope"></i></span>
-                            <input type="email" class="form-control border-start-0 ps-0" id="email" name="email" placeholder="name@domain.com" value="<?= htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>" required autofocus>
+                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-envelope"></i></span>
+                            <input type="email" name="email" id="emailInput" class="form-control rounded-end-3 border-start-0 ps-0" placeholder="name@domain.lk" value="<?= htmlspecialchars($email_val, ENT_QUOTES, 'UTF-8') ?>" required autofocus>
                         </div>
                     </div>
 
                     <div class="mb-4">
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <label for="password" class="form-label fw-semibold text-dark small mb-0">Password</label>
+                            <label for="passwordInput" class="form-label small fw-semibold text-muted mb-0">Password</label>
                         </div>
                         <div class="input-group">
-                            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-lock"></i></span>
-                            <input type="password" class="form-control border-start-0 ps-0" id="password" name="password" placeholder="••••••••" required>
+                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock"></i></span>
+                            <input type="password" name="password" id="passwordInput" class="form-control rounded-end-3 border-start-0 ps-0" placeholder="••••••••" required>
                         </div>
                     </div>
 
-                    <button type="submit" id="loginBtn" class="btn btn-primary w-100 py-2.5 fw-semibold d-flex align-items-center justify-content-center gap-2 shadow-sm">
-                        <span>Sign In</span>
-                        <i class="bi bi-arrow-right"></i>
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold rounded-3 mb-3 shadow-sm">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
                     </button>
                 </form>
 
-                <hr class="my-4 text-muted opacity-25">
-
-                <div class="text-center">
-                    <p class="text-muted small mb-0">Don't have an AgriSync account? 
-                        <a href="<?= APP_URL ?>/auth/register.php" class="text-primary fw-bold text-decoration-none">Create Account</a>
-                    </p>
-                </div>
-
-                <!-- Demo Account Credentials Helper -->
-                <div class="mt-4 p-3 bg-light rounded-3 text-center border">
-                    <p class="text-muted extra-small fw-semibold mb-2"><i class="bi bi-key-fill me-1 text-primary"></i> Demo Login Accounts (Password: <code>password123</code>)</p>
-                    <div class="d-flex justify-content-center gap-1.5 flex-wrap extra-small">
-                        <span class="badge bg-white text-dark border me-1">Farmer: farmer@agrisync.lk</span>
-                        <span class="badge bg-white text-dark border me-1">Business: buyer@agrisync.lk</span>
-                        <span class="badge bg-white text-dark border">Admin: admin@agrisync.lk</span>
+                <!-- Demo Credentials Helper -->
+                <div class="border-top pt-3 mt-2">
+                    <span class="text-muted extra-small d-block text-center mb-2 fw-semibold text-uppercase" style="font-size: 0.75rem;">Quick Demo Logins</span>
+                    <div class="d-grid gap-1">
+                        <button type="button" class="btn btn-light btn-sm text-start py-1 px-2 border small" onclick="fillCreds('sunil@agrisync.lk', 'Farmer@123')">
+                            🌱 <strong>Farmer:</strong> sunil@agrisync.lk <small class="text-muted">(Farmer@123)</small>
+                        </button>
+                        <button type="button" class="btn btn-light btn-sm text-start py-1 px-2 border small" onclick="fillCreds('procurement@keells.lk', 'Business@123')">
+                            🛒 <strong>Buyer:</strong> procurement@keells.lk <small class="text-muted">(Business@123)</small>
+                        </button>
+                        <button type="button" class="btn btn-light btn-sm text-start py-1 px-2 border small" onclick="fillCreds('admin@agrisync.lk', 'Admin@123')">
+                            🛡️ <strong>Admin:</strong> admin@agrisync.lk <small class="text-muted">(Admin@123)</small>
+                        </button>
                     </div>
                 </div>
+
             </div>
+
+            <div class="text-center mt-3 text-muted small">
+                Don't have an account? <a href="register.php" class="text-success fw-semibold text-decoration-none">Create one now</a>
+            </div>
+
         </div>
     </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('loginForm');
-    const loginBtn = document.getElementById('loginBtn');
-    const loginAlert = document.getElementById('loginAlert');
-
-    loginForm.addEventListener('submit', async (e) => {
-        // Provide seamless AJAX authentication experience
-        e.preventDefault();
-        loginAlert.classList.add('d-none');
-        
-        const originalBtnContent = loginBtn.innerHTML;
-        loginBtn.disabled = true;
-        loginBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Authenticating...`;
-
-        try {
-            const formData = new FormData(loginForm);
-            const response = await fetch('<?= APP_URL ?>/api/auth.php?action=login', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': '<?= generateCSRFToken() ?>'
-                }
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                if (window.AgriSync && window.AgriSync.showToast) {
-                    window.AgriSync.showToast('Login successful! Redirecting...', 'success');
-                }
-                setTimeout(() => {
-                    window.location.href = result.data.redirect;
-                }, 400);
-            } else {
-                loginAlert.textContent = result.error || 'Invalid email or password';
-                loginAlert.classList.remove('d-none');
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = originalBtnContent;
-            }
-        } catch (error) {
-            // Fallback to standard form submit if fetch API fails
-            loginForm.submit();
-        }
-    });
-});
+function fillCreds(email, pass) {
+    document.getElementById('emailInput').value = email;
+    document.getElementById('passwordInput').value = pass;
+}
 </script>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

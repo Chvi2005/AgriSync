@@ -52,41 +52,45 @@ async function fetchAPI(url, options = {}) {
 }
 
 /**
- * Display dynamic Bootstrap toast notification
+ * Display dynamic Bootstrap toast notification (Top-Right, 4s auto-dismiss, smooth slide-in)
  * 
  * @param {string} message 
- * @param {'success'|'danger'|'warning'|'info'} type 
+ * @param {'success'|'error'|'danger'|'info'} type 
  * @param {number} duration 
  */
-function showToast(message, type = 'info', duration = 4500) {
+function showToast(message, type = 'info', duration = 4000) {
     let container = document.getElementById('toastContainer');
     if (!container) {
         container = document.createElement('div');
         container.id = 'toastContainer';
         container.className = 'toast-container position-fixed top-0 end-0 p-3';
         container.style.zIndex = '1090';
+        container.setAttribute('aria-live', 'polite');
+        container.setAttribute('aria-atomic', 'true');
         document.body.appendChild(container);
     }
 
     // Normalize type
-    const toastType = type === 'error' ? 'danger' : type;
+    const normalizedType = type === 'danger' ? 'error' : type;
+
+    // Theme CSS class mapping
+    const themeClass = 'toast-theme-' + (['success', 'error', 'info'].includes(normalizedType) ? normalizedType : 'info');
 
     // Icon mapping
     const icons = {
-        success: 'bi-check-circle-fill text-success',
-        danger: 'bi-exclamation-triangle-fill text-danger',
-        warning: 'bi-exclamation-circle-fill text-warning',
-        info: 'bi-info-circle-fill text-info'
+        success: 'bi-check-circle-fill',
+        error: 'bi-exclamation-triangle-fill',
+        info: 'bi-info-circle-fill'
     };
-    const iconClass = icons[toastType] || icons.info;
+    const iconClass = icons[normalizedType] || icons.info;
 
     const toastId = 'toast_' + Math.random().toString(36).substring(2, 9);
     const toastHtml = `
-        <div id="${toastId}" class="toast align-items-center border-0 shadow-sm mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="${toastId}" class="toast align-items-center ${themeClass} border-0 shadow-md mb-2" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
-                <div class="toast-body d-flex align-items-center gap-2">
+                <div class="toast-body d-flex align-items-center gap-2 py-3 px-3">
                     <i class="bi ${iconClass} fs-5"></i>
-                    <span class="text-dark">${escapeHtml(message)}</span>
+                    <span class="fw-medium">${escapeHtml(message)}</span>
                 </div>
                 <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
@@ -96,11 +100,14 @@ function showToast(message, type = 'info', duration = 4500) {
     container.insertAdjacentHTML('beforeend', toastHtml);
     const toastEl = document.getElementById(toastId);
     if (window.bootstrap && window.bootstrap.Toast) {
-        const toast = new bootstrap.Toast(toastEl, { delay: duration });
+        const toast = new bootstrap.Toast(toastEl, { delay: duration, autohide: true });
         toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
         toast.show();
     } else {
-        setTimeout(() => toastEl.remove(), duration);
+        setTimeout(() => {
+            toastEl.classList.remove('show');
+            setTimeout(() => toastEl.remove(), 350);
+        }, duration);
     }
 }
 
