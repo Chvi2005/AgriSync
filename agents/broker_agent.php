@@ -309,22 +309,26 @@ class BrokerAgent {
         . "- agent_reasoning (string: detailed 2-3 sentence explanation explaining why this farmer was chosen based on district proximity, fresh harvest date, fair-trade pricing, and SDG impact)\n"
         . "- summary (string: 1 sentence executive verdict)";
 
-        if ($this->gemini->isConfigured()) {
-            $aiResponse = $this->gemini->generateJSON($prompt, [
-                'systemInstruction' => $systemInstruction,
-                'temperature' => 0.15
-            ]);
+        try {
+            if ($this->gemini->isConfigured()) {
+                $aiResponse = $this->gemini->generateJSON($prompt, [
+                    'systemInstruction' => $systemInstruction,
+                    'temperature' => 0.15
+                ]);
 
-            if ($aiResponse['success'] && !empty($aiResponse['data']['selected_listing_id'])) {
-                $data = $aiResponse['data'];
-                return [
-                    'selected_listing_id' => (int) $data['selected_listing_id'],
-                    'recommended_price_per_kg' => (float) ($data['recommended_price_per_kg'] ?? $topCandidate['listing_price_per_kg']),
-                    'confidence_score' => (int) ($data['confidence_score'] ?? 92),
-                    'agent_reasoning' => (string) ($data['agent_reasoning'] ?? "Matched based on optimal district proximity and sustainable fair-trade pricing."),
-                    'used_gemini' => true
-                ];
+                if ($aiResponse['success'] && !empty($aiResponse['data']['selected_listing_id'])) {
+                    $data = $aiResponse['data'];
+                    return [
+                        'selected_listing_id' => (int) $data['selected_listing_id'],
+                        'recommended_price_per_kg' => (float) ($data['recommended_price_per_kg'] ?? $topCandidate['listing_price_per_kg']),
+                        'confidence_score' => (int) ($data['confidence_score'] ?? 92),
+                        'agent_reasoning' => (string) ($data['agent_reasoning'] ?? "Matched based on optimal district proximity and sustainable fair-trade pricing."),
+                        'used_gemini' => true
+                    ];
+                }
             }
+        } catch (Throwable $e) {
+            error_log('BrokerAgent Gemini matching error (falling back to algorithmic): ' . $e->getMessage());
         }
 
         // Algorithmic Fallback (if Gemini key not present or network unavailable)
