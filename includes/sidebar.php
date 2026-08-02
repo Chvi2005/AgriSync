@@ -28,7 +28,7 @@ if ($current_role === 'admin') {
     $nav_items = [
         ['label' => 'Dashboard', 'icon' => 'bi-speedometer2', 'url' => $app_url . '/farmer/dashboard.php', 'file' => 'dashboard.php'],
         ['label' => 'My Harvests', 'icon' => 'bi-flower1', 'url' => $app_url . '/farmer/harvests.php', 'file' => 'harvests.php'],
-        ['label' => 'Demand Advisory', 'icon' => 'bi-graph-up-arrow', 'url' => $app_url . '/farmer/demand.php', 'file' => 'demand.php', 'badge' => 'AI'],
+        ['label' => 'AI Insights & Demand', 'icon' => 'bi-graph-up-arrow', 'url' => $app_url . '/farmer/ai_insights.php', 'file' => 'ai_insights.php', 'badge' => 'AI'],
         ['label' => 'Buyer Offers', 'icon' => 'bi-receipt-cutoff', 'url' => $app_url . '/farmer/offers.php', 'file' => 'offers.php'],
         ['label' => 'My Profile', 'icon' => 'bi-person-circle', 'url' => $app_url . '/farmer/profile.php', 'file' => 'profile.php'],
     ];
