@@ -267,6 +267,46 @@ function renderEmptyStateHTML(title, description = '', icon = 'bi-inbox', btnTex
     `;
 }
 
+/**
+ * Render reusable Dashboard Summary Stat Card HTML string (.stat-card)
+ * 
+ * @param {string} label 
+ * @param {string} value 
+ * @param {string} icon 
+ * @param {'primary'|'success'|'info'|'warning'|'danger'} color 
+ * @param {string|null} trend 
+ * @param {string|null} valueId 
+ * @returns {string}
+ */
+function renderStatCardHTML(label, value, icon, color = 'primary', trend = null, valueId = null) {
+    const validColors = ['primary', 'success', 'info', 'warning', 'danger'];
+    const validColor = validColors.includes(color) ? color : 'primary';
+    const idAttr = valueId ? `id="${escapeHtml(valueId)}"` : '';
+
+    let trendHtml = '';
+    if (trend) {
+        const isDown = trend.toLowerCase().includes('down') || trend.includes('-');
+        const trendClass = isDown ? 'trend-down' : 'trend-up';
+        const trendIcon = isDown ? 'bi-arrow-down-right' : 'bi-arrow-up-right';
+        trendHtml = `<div class="stat-card-trend ${trendClass}"><i class="bi ${trendIcon}"></i> ${escapeHtml(trend)}</div>`;
+    }
+
+    return `
+        <div class="stat-card stat-card-${validColor}">
+            <div class="stat-card-inner">
+                <div>
+                    <span class="stat-card-label">${escapeHtml(label)}</span>
+                    <h3 class="stat-card-value" ${idAttr}>${escapeHtml(value)}</h3>
+                    ${trendHtml}
+                </div>
+                <div class="stat-card-icon-wrapper">
+                    <i class="bi ${escapeHtml(icon)}"></i>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 // Auto-initialize Bootstrap components on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
     // Tooltips

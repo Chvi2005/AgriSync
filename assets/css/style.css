@@ -300,3 +300,85 @@ h3 { font-size: 1.25rem; }
 .empty-state-action {
     margin-top: 0.5rem;
 }
+
+/* Reusable Dashboard Summary Stat Card (.stat-card) */
+.stat-card {
+    background-color: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+
+.stat-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+
+.stat-card-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stat-card-label {
+    font-size: 0.775rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--clr-text-muted);
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+.stat-card-value {
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: var(--clr-text);
+    margin-bottom: 0;
+    line-height: 1.2;
+}
+
+.stat-card-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+/* Color Accent Variants */
+.stat-card-primary { border-left: 4px solid var(--clr-primary); }
+.stat-card-primary .stat-card-icon-wrapper { background-color: var(--clr-accent-light); color: var(--clr-primary); }
+
+.stat-card-success { border-left: 4px solid #198754; }
+.stat-card-success .stat-card-icon-wrapper { background-color: #D1E7DD; color: #198754; }
+
+.stat-card-info { border-left: 4px solid var(--clr-info); }
+.stat-card-info .stat-card-icon-wrapper { background-color: #CFF4FC; color: #055160; }
+
+.stat-card-warning { border-left: 4px solid var(--clr-warning); }
+.stat-card-warning .stat-card-icon-wrapper { background-color: #FFF3CD; color: #664D03; }
+
+.stat-card-danger { border-left: 4px solid var(--clr-danger); }
+.stat-card-danger .stat-card-icon-wrapper { background-color: #F8D7DA; color: #842029; }
+
+/* Optional Trend Indicators */
+.stat-card-trend {
+    font-size: 0.775rem;
+    font-weight: 600;
+    margin-top: 0.4rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.trend-up { color: #198754; }
+.trend-down { color: #DC3545; }
