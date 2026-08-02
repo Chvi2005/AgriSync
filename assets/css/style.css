@@ -192,21 +192,29 @@ h3 { font-size: 1.25rem; }
     border: 1px solid #D3D6D8; 
 }
 
-/* Sidebar & Main Content Dashboard Grid Layout */
+/* Dark Sidebar & Main Content Dashboard Grid Layout */
 .dashboard-wrapper {
     min-height: calc(100vh - 56px);
 }
 
 .sidebar {
     min-height: calc(100vh - 56px);
-    background: #ffffff;
-    border-right: 1px solid var(--clr-border);
-    transition: var(--transition-fast);
+    background-color: var(--clr-primary-dark) !important; /* #1B4332 */
+    color: #ffffff;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     z-index: 100;
 }
 
+.sidebar-header {
+    color: rgba(255, 255, 255, 0.5) !important;
+    font-size: 0.725rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
 .sidebar .nav-link {
-    color: var(--clr-text-muted);
+    color: rgba(255, 255, 255, 0.8) !important;
     padding: 0.75rem 1rem;
     border-radius: var(--radius-sm);
     font-weight: 500;
@@ -214,17 +222,31 @@ h3 { font-size: 1.25rem; }
     align-items: center;
     gap: 0.75rem;
     transition: var(--transition-fast);
+    margin-bottom: 0.25rem;
+    border-left: 3px solid transparent;
 }
 
 .sidebar .nav-link:hover {
-    color: var(--clr-primary);
-    background-color: var(--clr-accent-light);
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-left-color: var(--clr-accent) !important;
 }
 
 .sidebar .nav-link.active {
-    color: #ffffff;
-    background-color: var(--clr-primary);
+    color: #ffffff !important;
+    background-color: var(--clr-primary) !important; /* #2D6A4F */
     font-weight: 600;
+    border-left-color: var(--clr-accent) !important; /* #95D5B2 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar .nav-link i {
+    font-size: 1.15rem;
+    color: var(--clr-accent);
+}
+
+.sidebar .nav-link.active i {
+    color: #ffffff;
 }
 
 .main-content {
@@ -237,7 +259,7 @@ h3 { font-size: 1.25rem; }
     .sidebar {
         min-height: auto;
         border-right: none;
-        border-bottom: 1px solid var(--clr-border);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
     .main-content {
         padding: 1rem;
