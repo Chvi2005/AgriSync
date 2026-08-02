@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.success) {
                 const requests = data.data.requests || [];
                 if (requests.length === 0) {
-                    requestsTbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">No pre-order requests match the selected filter.</td></tr>`;
+                    requestsTbody.innerHTML = `<tr><td colspan="7" class="p-0">${renderEmptyStateHTML('No pre-order requests yet', 'Submit your bulk crop procurement needs for automated farmer yield matching.', 'bi-bag-plus', 'Submit Pre-Order', '#addRequestModal')}</td></tr>`;
                     return;
                 }
 
