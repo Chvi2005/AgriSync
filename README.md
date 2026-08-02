@@ -20,7 +20,9 @@
 3. [System Architecture & Multi-Agent Workflow](#-system-architecture--multi-agent-workflow)
 4. [United Nations SDGs Alignment](#-united-nations-sdgs-alignment)
 5. [Core User Portals & Features](#-core-user-portals--features)
-6. [Technology Stack](#-technology-stack)
+6. [Technology Stack & Architectural Pivot](#-technology-stack--architectural-pivot)
+   - [Original Proposal vs. Implemented Architecture](#original-proposal-vs-implemented-architecture)
+   - [Strategic Justification for Pivoting to PHP & MySQL](#strategic-justification-for-pivoting-to-php--mysql)
 7. [Installation & Quick Start Guide](#-installation--quick-start-guide)
 8. [Demo Accounts & Walkthrough](#-demo-accounts--walkthrough)
 9. [Automated Test Suite & Verification](#-automated-test-suite--verification)
@@ -153,15 +155,56 @@ agrisync/
 
 ---
 
-## 🛠️ Technology Stack
+## 🛠️ Technology Stack & Architectural Pivot
 
-- **Backend**: PHP 8.x (Vanilla, strict OOP, PDO prepared statements)
-- **Database**: MySQL 8.x with InnoDB, foreign keys, and indexes
-- **AI Subsystem**: Google Gemini 2.5 Flash / Flash Latest via cURL with JSON Mode
-- **Frontend**: HTML5, Bootstrap 5.3.3, Vanilla JavaScript (ES6+ `fetch`), Custom CSS
-- **Data Visualizations**: Chart.js 4.4
+### Core Technology Stack
+- **Backend Core**: PHP 8.x (Vanilla, Strict Object-Oriented Architecture, PDO Prepared Statements)
+- **Relational Database**: MySQL 8.x with InnoDB Storage Engine, Foreign Keys, Referential Integrity, and Indexes
+- **AI Subsystem**: Google Gemini 2.5 Flash / Flash Latest via Native cURL & JSON Structured Mode Chaining
+- **Frontend Architecture**: HTML5, Bootstrap 5.3.3 Design System, Vanilla JavaScript (ES6+ `fetch` API), Custom CSS Tokens
+- **Data Visualizations & Analytics**: Chart.js 4.4 CDN
 - **Icons & Typography**: Bootstrap Icons, Google Fonts (Inter)
-- **Security**: CSRF token validation on all POST requests, Bcrypt password hashing, XSS output encoding
+- **Security & Integrity**: CSRF Token Guarding across all mutating requests, Bcrypt Password Hashing (`PASSWORD_BCRYPT`), Full XSS Output Escaping (`htmlspecialchars`)
+
+---
+
+### 🔄 Architectural Pivot: Transition from MERN Stack to PHP & MySQL
+
+In accordance with the **IDEALIZE 2026 Prototype Submission Guidelines** (*"Any pivots from the original proposal (tech stack, features, or agent behavior) must be clearly explained and justified"* — see [`prototypeSubmission.md`](prototypeSubmission.md)), this section documents our strategic transition from our initial proposal ([`projectProposal.md`](projectProposal.md)) to the final implemented prototype.
+
+#### 1. Original Proposal vs. Implemented Architecture
+
+| Architectural Layer | Initial Proposal (`projectProposal.md`) | Final Implemented Prototype |
+|---|---|---|
+| **Backend & Runtime** | Node.js with Express.js | **PHP 8.x (Vanilla Strict OOP)** |
+| **Database System** | MongoDB / Firebase / PostgreSQL | **MySQL 8.x (InnoDB with ACID Transactions & Foreign Keys)** |
+| **Frontend Framework** | React.js / Next.js & React Native | **Vanilla JavaScript (ES6+), Bootstrap 5.3.3 & Semantic HTML5** |
+| **AI Integration Layer**| Firebase Genkit | **Google Gemini API (cURL + Multi-Model Fallback Engine)** |
+
+#### 2. Strategic Justification for the Pivot
+
+1. **Leveraging Core Familiarity vs. Steep Framework Overhead**:
+   - In our original project proposal, the team enthusiastically proposed the **MERN Stack** (MongoDB, Express, React, Node.js) with the ambition of expanding our technical horizons and learning modern JavaScript frameworks.
+   - However, during the early development sprint, the team encountered severe **academic scheduling pressures, semester coursework deadlines, and examination commitments**.
+   - Developing with React and Node.js required substantial time dedicated to configuring bundlers, asynchronous state management, complex microservices, and debugging framework-specific build pipelines, which diverted critical hours away from the core domain problem.
+
+2. **Rapid, Frictionless Delivery with Proven Technologies**:
+   - The team possessed solid, practical, and battle-tested experience with **PHP and MySQL**. Choosing PHP enabled the team to achieve immediate velocity, writing clean, performant, and reliable code without getting bogged down by dependency friction or build configurations.
+   - PHP 8.x provides modern object-oriented paradigms, exceptional execution speed, built-in session management, and robust native networking capabilities.
+
+3. **100% Focus on High-Impact Innovation (Multi-Agent AI & Fair Trade)**:
+   - By eliminating framework friction, the team was able to concentrate all engineering effort on what mattered most for the competition:
+     - Engineering genuine, autonomous **AI Agent Workflows** ([`DemandAgent`](agents/demand_agent.php) and [`BrokerAgent`](agents/broker_agent.php)) powered by **Google Gemini 2.5 Flash**.
+     - Constructing an ultra-resilient **Multi-Model Fallback Engine** ([`GeminiClient`](agents/gemini_client.php)) with automatic failover to local Sri Lankan agricultural heuristic knowledge bases.
+     - Designing an algorithmic multi-constraint matching engine that calculates localized food miles, harvest freshness windows, and a guaranteed **1.20x Fair-Trade Minimum Price Multiplier**.
+     - Developing three fully functional, dedicated portals for **Farmers**, **Commercial Buyers**, and **System Administrators**.
+
+4. **Relational Data Integrity & Deterministic Transactions**:
+   - Sri Lankan agricultural commerce involves strict transactional safety: crop listing quantities, buyer budgets, multi-stage order confirmations, and audit logging.
+   - **MySQL 8.x with InnoDB** provided native ACID guarantees, strict foreign key cascade rules, and relational joins that offered greater stability and consistency than a NoSQL schema like MongoDB.
+
+5. **Zero-Configuration Portability & Robust Evaluation**:
+   - The final PHP 8 & MySQL architecture runs seamlessly using PHP's built-in web server (`php -S localhost:8000`) and standard MySQL with zero npm/node build dependencies, ensuring judges and reviewers can effortlessly clone, configure, run, and evaluate the entire application in under 2 minutes.
 
 ---
 
