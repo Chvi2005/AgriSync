@@ -37,14 +37,21 @@ CREATE TABLE IF NOT EXISTS `farmer_profiles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `farm_name` varchar(150) DEFAULT NULL,
-  `location` varchar(255) DEFAULT NULL,
+  `farm_size_acres` decimal(6,2) DEFAULT NULL,
   `primary_crops` text DEFAULT NULL,
+  `farming_method` enum('organic','conventional','greenhouse','hydroponic') DEFAULT 'conventional',
+  `bank_account_no` varchar(50) DEFAULT NULL,
+  `bank_name` varchar(100) DEFAULT NULL,
+  `bank_branch` varchar(100) DEFAULT NULL,
+  `bio` text DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id_unique` (`user_id`),
   CONSTRAINT `fk_farmer_profile_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 -- --------------------------------------------------------
 -- Table structure for table `harvest_listings`
