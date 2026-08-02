@@ -19,9 +19,9 @@ class AgentLogger {
      * @param array $logData Detailed payload, prompt, response, metrics
      * @return int|null Inserted log ID or null on failure
      */
-    public static function log(string $agentType, string $actionStep, ?int $orderId = null, array $logData = []): ?int {
+    public static function log(string $agentType, string $actionStep, ?int $orderId = null, array $logData = [], ?PDO $customDb = null): ?int {
         try {
-            $db = getDbConnection();
+            $db = $customDb ?? getDbConnection();
             $stmt = $db->prepare("
                 INSERT INTO agent_logs (agent_type, order_id, action_step, log_data, created_at)
                 VALUES (:agent_type, :order_id, :action_step, :log_data, NOW())
