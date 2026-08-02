@@ -136,33 +136,66 @@ class GeminiClient {
         $url = $this->apiUrl . '?key=' . urlencode($this->apiKey);
         $jsonPayload = json_encode($payload);
 
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $jsonPayload,
-            CURLOPT_HTTPHEADER => [
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen($jsonPayload)
-            ],
-            CURLOPT_TIMEOUT => $this->timeout,
-            CURLOPT_CONNECTTIMEOUT => 10,
-            CURLOPT_SSL_VERIFYPEER => true
-        ]);
+        if (function_exists('curl_init')) {
+            $ch = curl_init();
+            curl_setopt_array($ch, [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => $jsonPayload,
+                CURLOPT_HTTPHEADER => [
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($jsonPayload)
+                ],
+                CURLOPT_TIMEOUT => $this->timeout,
+                CURLOPT_CONNECTTIMEOUT => 10,
+                CURLOPT_SSL_VERIFYPEER => true
+            ]);
 
-        $result = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($ch);
-        curl_close($ch);
+            $result = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
 
-        if ($curlError) {
-            return [
-                'success' => false,
-                'text' => null,
-                'error' => 'cURL Error communicating with Gemini API: ' . $curlError,
-                'raw' => null
+            if ($curlError) {
+                return [
+                    'success' => false,
+                    'text' => null,
+                    'error' => 'cURL Error communicating with Gemini API: ' . $curlError,
+                    'raw' => null
+                ];
+            }
+        } else {
+            // Stream context fallback when ext-curl is not loaded in PHP CLI
+            $opts = [
+                'http' => [
+                    'method' => 'POST',
+                    'header' => "Content-Type: application/json\r\n" .
+                                "Content-Length: " . strlen($jsonPayload) . "\r\n",
+                    'content' => $jsonPayload,
+                    'timeout' => $this->timeout,
+                    'ignore_errors' => true
+                ],
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false
+                ]
             ];
+            $context = stream_context_create($opts);
+            $result = @file_get_contents($url, false, $context);
+            $httpCode = 200;
+            if (isset($http_response_header) && preg_match('/HTTP\/\S+\s+(\d+)/', $http_response_header[0] ?? '', $matches)) {
+                $httpCode = (int) $matches[1];
+            }
+
+            if ($result === false) {
+                return [
+                    'success' => false,
+                    'text' => null,
+                    'error' => 'HTTP request failed while communicating with Gemini API.',
+                    'raw' => null
+                ];
+            }
         }
 
         $responseArray = json_decode($result, true);
