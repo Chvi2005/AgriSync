@@ -64,6 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($check->fetch()) {
                 $error = 'An account with this email address already exists.';
             } else {
+                $db->beginTransaction();
+
                 $hash = password_hash($password, PASSWORD_BCRYPT);
                 $ins = $db->prepare("
                     INSERT INTO users (name, email, password_hash, role, phone, district, is_active, created_at, updated_at)
@@ -89,10 +91,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $pIns->execute([':uid' => $user_id, ':name' => $name_val, ':dist' => $district_val, ':phone' => $phone_val]);
                 }
 
+                $db->commit();
+
                 $app_url = defined('APP_URL') ? APP_URL : '';
                 redirect($app_url . '/auth/login.php?registered=1');
             }
         } catch (Throwable $e) {
+            if (isset($db) && $db->inTransaction()) {
+                $db->rollBack();
+            }
             error_log("Registration Error: " . $e->getMessage());
             $error = 'Registration temporarily unavailable. Please try again.';
         }
