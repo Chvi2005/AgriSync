@@ -1,0 +1,216 @@
+/* ==========================================================================
+   AgriSync — Design System & Custom Stylesheet (TASK-007)
+   Theme: Agriculture Intelligence & Sustainable Supply Chain
+   ========================================================================== */
+
+:root {
+    /* AgriSync Brand Color Palette */
+    --clr-primary: #2D6A4F;
+    --clr-primary-dark: #1B4332;
+    --clr-primary-light: #40916C;
+    --clr-accent: #95D5B2;
+    --clr-accent-light: #D8F3DC;
+    --clr-bg: #F8F9FA;
+    --clr-surface: #FFFFFF;
+    --clr-text: #212529;
+    --clr-text-muted: #6C757D;
+    --clr-border: #E9ECEF;
+    --clr-danger: #DC3545;
+    --clr-warning: #FFC107;
+    --clr-info: #0DCAF0;
+
+    /* Spacing, Radius, and Shadows */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+    --transition-fast: all 0.2s ease;
+}
+
+/* Base & Typography */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--clr-bg);
+    color: var(--clr-text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: var(--clr-primary-dark);
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
+
+/* Custom Cards */
+.card, .agri-card {
+    background-color: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-fast);
+}
+
+.card:hover, .agri-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid var(--clr-border);
+    font-weight: 600;
+    padding: 1rem 1.25rem;
+}
+
+/* Custom Buttons */
+.btn {
+    border-radius: var(--radius-sm);
+    min-height: 44px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    transition: var(--transition-fast);
+}
+
+.btn-primary {
+    background-color: var(--clr-primary);
+    border-color: var(--clr-primary);
+    color: #ffffff;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background-color: var(--clr-primary-dark) !important;
+    border-color: var(--clr-primary-dark) !important;
+    transform: translateY(-1px);
+}
+
+.btn-outline-primary {
+    color: var(--clr-primary);
+    border-color: var(--clr-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--clr-primary);
+    border-color: var(--clr-primary);
+    color: #ffffff;
+}
+
+/* Form Controls */
+.form-control, .form-select {
+    border-radius: var(--radius-sm);
+    min-height: 44px;
+    border: 1px solid #ced4da;
+    transition: var(--transition-fast);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--clr-primary-light);
+    box-shadow: 0 0 0 0.25rem rgba(45, 106, 79, 0.2);
+}
+
+/* Status Badges */
+.badge-status {
+    padding: 0.4rem 0.8rem;
+    border-radius: 50rem;
+    font-size: 0.825rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.badge-status-pending { background-color: #FFF3CD; color: #856404; border: 1px solid #FFEBAA; }
+.badge-status-matched { background-color: #CFF4FC; color: #055160; border: 1px solid #B6EFFB; }
+.badge-status-accepted { background-color: #D1E7DD; color: #0F5132; border: 1px solid #BADBCC; }
+.badge-status-completed { background-color: var(--clr-accent-light); color: var(--clr-primary-dark); border: 1px solid var(--clr-accent); }
+.badge-status-rejected { background-color: #F8D7DA; color: #842029; border: 1px solid #F5C2C7; }
+.badge-status-secondary { background-color: #E2E3E5; color: #41464B; border: 1px solid #D3D6D8; }
+
+/* Sidebar Navigation */
+.sidebar {
+    min-height: 100vh;
+    background: #ffffff;
+    border-right: 1px solid var(--clr-border);
+    transition: var(--transition-fast);
+}
+
+.sidebar .nav-link {
+    color: var(--clr-text-muted);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: var(--transition-fast);
+}
+
+.sidebar .nav-link:hover {
+    color: var(--clr-primary);
+    background-color: var(--clr-accent-light);
+}
+
+.sidebar .nav-link.active {
+    color: #ffffff;
+    background-color: var(--clr-primary);
+}
+
+/* AI Agent Animation & Card Styles */
+.ai-card {
+    background: linear-gradient(135deg, rgba(216, 243, 220, 0.4) 0%, rgba(255, 255, 255, 0.9) 100%);
+    border: 1px solid var(--clr-accent);
+    border-radius: var(--radius-md);
+}
+
+.ai-pulse {
+    animation: pulse-glow 2s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+    0% { box-shadow: 0 0 0 0 rgba(64, 145, 108, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(64, 145, 108, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(64, 145, 108, 0); }
+}
+
+.agent-spinner {
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 3px solid var(--clr-accent-light);
+    border-top-color: var(--clr-primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Modern Glassmorphic Toast Notifications */
+.toast-container .toast {
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-lg);
+    border: none;
+    backdrop-filter: blur(8px);
+}
+
+/* Empty State Component */
+.empty-state {
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    color: var(--clr-text-muted);
+    margin-bottom: 1rem;
+}
