@@ -11,7 +11,7 @@ define('DB_CHARSET', 'utf8mb4');
 
 // Google Gemini AI Configuration
 define('GEMINI_API_KEY', 'your-gemini-api-key-here');
-define('GEMINI_MODEL', 'gemini-1.5-flash');
+define('GEMINI_MODEL', 'gemini-2.5-flash');
 define('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/');
 
 // Dynamic Application URL Resolution
