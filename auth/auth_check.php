@@ -1,42 +1,82 @@
 <?php
-// AgriSync User Authentication & Role Protection (TASK-009)
-// Safe to require_once on protected pages and API endpoints
+/**
+ * AgriSync Authentication & Role Authorization Middleware (TASK-019 / TASK-009)
+ * Protects routes and ensures authenticated access with role verification.
+ */
 
-require_once __DIR__ . '/../config/session.php';
+if (session_status() === PHP_SESSION_NONE) {
+    require_once __DIR__ . '/../config/session.php';
+}
+if (!defined('APP_NAME')) {
+    require_once __DIR__ . '/../config/constants.php';
+}
 require_once __DIR__ . '/../includes/functions.php';
 
-// Global Authentication Check
-if (!isLoggedIn()) {
-    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-    if (str_contains($request_uri, '/api/')) {
-        jsonResponse(false, [], 'Unauthorized access. Please log in.', 401);
+/**
+ * Enforce that the user is logged in
+ * 
+ * @return void
+ */
+function requireLogin(): void {
+    if (empty($_SESSION['user_id'])) {
+        $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+        if (str_contains($request_uri, '/api/')) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'error' => 'Unauthorized access. Please log in.']);
+            exit;
+        }
+        $_SESSION['flash_error'] = 'Please log in to access this page.';
+        $app_url = defined('APP_URL') ? APP_URL : '';
+        redirect($app_url . '/auth/login.php');
     }
-    $login_path = defined('APP_URL') ? APP_URL . '/auth/login.php' : '/auth/login.php';
-    redirect($login_path);
 }
 
 /**
- * Enforce role-based access control for specific routes
+ * Enforce specific user role(s)
  * 
- * @param array $allowed_roles Array of permitted roles (e.g. ['farmer', 'admin'])
+ * @param string|array $allowed_roles
  * @return void
  */
-function checkRole(array $allowed_roles): void {
-    $current_role = getUserRole();
-    if (!$current_role || !in_array($current_role, $allowed_roles, true)) {
+function requireRole(string|array $allowed_roles): void {
+    requireLogin();
+
+    $current_role = $_SESSION['user_role'] ?? '';
+    $allowed = is_array($allowed_roles) ? $allowed_roles : [$allowed_roles];
+
+    if (!in_array($current_role, $allowed, true)) {
         $request_uri = $_SERVER['REQUEST_URI'] ?? '';
         if (str_contains($request_uri, '/api/')) {
-            jsonResponse(false, [], 'Forbidden: Insufficient permissions for this action.', 403);
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'Forbidden: Insufficient permissions.']);
+            exit;
         }
-        
-        // Redirect to user's appropriate dashboard if logged in, or login page
-        $app_base = defined('APP_URL') ? APP_URL : '';
-        $target = match ($current_role) {
-            'farmer'   => $app_base . '/farmer/dashboard.php',
-            'business' => $app_base . '/business/dashboard.php',
-            'admin'    => $app_base . '/admin/dashboard.php',
-            default    => $app_base . '/auth/login.php',
-        };
-        redirect($target);
+
+        $app_url = defined('APP_URL') ? APP_URL : '';
+        // Redirect to their respective dashboard
+        if ($current_role === 'farmer') {
+            redirect($app_url . '/farmer/dashboard.php');
+        } elseif ($current_role === 'business') {
+            redirect($app_url . '/business/dashboard.php');
+        } elseif ($current_role === 'admin') {
+            redirect($app_url . '/admin/dashboard.php');
+        } else {
+            redirect($app_url . '/auth/login.php');
+        }
     }
+}
+
+/**
+ * Compatibility alias for checkRole
+ */
+function checkRole(array $allowed_roles): void {
+    requireRole($allowed_roles);
+}
+
+/**
+ * Enforce admin role
+ * 
+ * @return void
+ */
+function requireAdmin(): void {
+    requireRole('admin');
 }
