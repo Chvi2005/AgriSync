@@ -28,59 +28,63 @@ require_once __DIR__ . '/../includes/navbar.php';
         </div>
     </div>
 
-    <!-- Summary Metrics Grid -->
+    <!-- Summary Metrics Grid (4 per row desktop, 2 tablet, 1 mobile) -->
     <div class="row g-3 mb-4">
-        <div class="col-sm-6 col-xl-3">
-            <div class="card border-0 shadow-sm rounded-3 h-100 p-3 bg-white border-start border-primary border-4">
-                <div class="d-flex align-items-center justify-content-between">
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stat-card stat-card-primary">
+                <div class="stat-card-inner">
                     <div>
-                        <span class="text-muted extra-small text-uppercase fw-semibold d-block">Active Harvest Yield</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1" id="metricActiveListings">--</h3>
+                        <span class="stat-card-label">Active Harvest Yield</span>
+                        <h3 class="stat-card-value" id="metricActiveListings">--</h3>
+                        <div class="stat-card-trend trend-up"><i class="bi bi-arrow-up-right"></i> Active</div>
                     </div>
-                    <div class="bg-primary-subtle text-primary p-3 rounded-circle">
-                        <i class="bi bi-box-seam fs-4"></i>
+                    <div class="stat-card-icon-wrapper">
+                        <i class="bi bi-box-seam"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-6 col-xl-3">
-            <div class="card border-0 shadow-sm rounded-3 h-100 p-3 bg-white border-start border-success border-4">
-                <div class="d-flex align-items-center justify-content-between">
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stat-card stat-card-success">
+                <div class="stat-card-inner">
                     <div>
-                        <span class="text-muted extra-small text-uppercase fw-semibold d-block">Total Listed Volume</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1" id="metricTotalKg">-- kg</h3>
+                        <span class="stat-card-label">Total Listed Volume</span>
+                        <h3 class="stat-card-value" id="metricTotalKg">-- kg</h3>
+                        <div class="stat-card-trend trend-up"><i class="bi bi-arrow-up-right"></i> Farm Direct</div>
                     </div>
-                    <div class="bg-success-subtle text-success p-3 rounded-circle">
-                        <i class="bi bi-tree fs-4"></i>
+                    <div class="stat-card-icon-wrapper">
+                        <i class="bi bi-tree"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-6 col-xl-3">
-            <div class="card border-0 shadow-sm rounded-3 h-100 p-3 bg-white border-start border-info border-4">
-                <div class="d-flex align-items-center justify-content-between">
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stat-card stat-card-info">
+                <div class="stat-card-inner">
                     <div>
-                        <span class="text-muted extra-small text-uppercase fw-semibold d-block">Fulfilled Revenue</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1" id="metricEarnings">Rs. 0.00</h3>
+                        <span class="stat-card-label">Fulfilled Revenue</span>
+                        <h3 class="stat-card-value" id="metricEarnings">Rs. 0.00</h3>
+                        <div class="stat-card-trend trend-up"><i class="bi bi-arrow-up-right"></i> Verified</div>
                     </div>
-                    <div class="bg-info-subtle text-info p-3 rounded-circle">
-                        <i class="bi bi-cash-stack fs-4"></i>
+                    <div class="stat-card-icon-wrapper">
+                        <i class="bi bi-cash-stack"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-6 col-xl-3">
-            <div class="card border-0 shadow-sm rounded-3 h-100 p-3 bg-white border-start border-warning border-4">
-                <div class="d-flex align-items-center justify-content-between">
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="stat-card stat-card-warning">
+                <div class="stat-card-inner">
                     <div>
-                        <span class="text-muted extra-small text-uppercase fw-semibold d-block">Pending Order Matches</span>
-                        <h3 class="fw-bold text-dark mb-0 mt-1" id="metricPendingMatches">--</h3>
+                        <span class="stat-card-label">Pending Order Matches</span>
+                        <h3 class="stat-card-value" id="metricPendingMatches">--</h3>
+                        <div class="stat-card-trend trend-up"><i class="bi bi-arrow-up-right"></i> AI Broker</div>
                     </div>
-                    <div class="bg-warning-subtle text-warning p-3 rounded-circle">
-                        <i class="bi bi-lightning-charge fs-4"></i>
+                    <div class="stat-card-icon-wrapper">
+                        <i class="bi bi-lightning-charge"></i>
                     </div>
                 </div>
             </div>

@@ -72,7 +72,12 @@ try {
                     <tbody>
                         <?php if (empty($matches)): ?>
                             <tr>
-                                <td colspan="8" class="text-center py-4 text-muted">No proposed order matches found yet. AI Broker matches available yields automatically as buyer pre-orders come in.</td>
+                                <td colspan="8" class="p-0">
+                                    <?php 
+                                    require_once __DIR__ . '/../includes/empty_state.php';
+                                    echo renderEmptyState('No proposed order matches yet', 'AI Broker matches available yields automatically as buyer pre-orders come in.', 'bi-cart-check', 'Manage Harvest Listings', APP_URL . '/farmer/listings.php'); 
+                                    ?>
+                                </td>
                             </tr>
                         <?php else: ?>
                             <?php foreach ($matches as $m): ?>

@@ -239,6 +239,81 @@ function pollNotifications(endpoint = '/api/notifications.php', onReceive = null
     }, intervalMs);
 }
 
+/**
+ * Render reusable empty state HTML string for client-side dynamic lists
+ * 
+ * @param {string} title 
+ * @param {string} description 
+ * @param {string} icon 
+ * @param {string|null} btnText 
+ * @param {string|null} btnTarget Modal ID starting with '#' or link URL
+ * @returns {string}
+ */
+function renderEmptyStateHTML(title, description = '', icon = 'bi-inbox', btnText = null, btnTarget = null) {
+    let btnHtml = '';
+    if (btnText && btnTarget) {
+        const isModal = btnTarget.startsWith('#');
+        if (isModal) {
+            btnHtml = `<div class="empty-state-action"><button type="button" class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="${escapeHtml(btnTarget)}"><i class="bi bi-plus-lg me-1"></i>${escapeHtml(btnText)}</button></div>`;
+        } else {
+            btnHtml = `<div class="empty-state-action"><a href="${escapeHtml(btnTarget)}" class="btn btn-primary shadow-sm"><i class="bi bi-plus-lg me-1"></i>${escapeHtml(btnText)}</a></div>`;
+        }
+    }
+
+    const descHtml = description ? `<p class="empty-state-description mb-3">${escapeHtml(description)}</p>` : '';
+
+    return `
+        <div class="empty-state py-5 text-center">
+            <div class="empty-state-icon-wrapper mx-auto">
+                <i class="bi ${escapeHtml(icon)}"></i>
+            </div>
+            <h5 class="empty-state-title">${escapeHtml(title)}</h5>
+            ${descHtml}
+            ${btnHtml}
+        </div>
+    `;
+}
+
+/**
+ * Render reusable Dashboard Summary Stat Card HTML string (.stat-card)
+ * 
+ * @param {string} label 
+ * @param {string} value 
+ * @param {string} icon 
+ * @param {'primary'|'success'|'info'|'warning'|'danger'} color 
+ * @param {string|null} trend 
+ * @param {string|null} valueId 
+ * @returns {string}
+ */
+function renderStatCardHTML(label, value, icon, color = 'primary', trend = null, valueId = null) {
+    const validColors = ['primary', 'success', 'info', 'warning', 'danger'];
+    const validColor = validColors.includes(color) ? color : 'primary';
+    const idAttr = valueId ? `id="${escapeHtml(valueId)}"` : '';
+
+    let trendHtml = '';
+    if (trend) {
+        const isDown = trend.toLowerCase().includes('down') || trend.includes('-');
+        const trendClass = isDown ? 'trend-down' : 'trend-up';
+        const trendIcon = isDown ? 'bi-arrow-down-right' : 'bi-arrow-up-right';
+        trendHtml = `<div class="stat-card-trend ${trendClass}"><i class="bi ${trendIcon}"></i> ${escapeHtml(trend)}</div>`;
+    }
+
+    return `
+        <div class="stat-card stat-card-${validColor}">
+            <div class="stat-card-inner">
+                <div>
+                    <span class="stat-card-label">${escapeHtml(label)}</span>
+                    <h3 class="stat-card-value" ${idAttr}>${escapeHtml(value)}</h3>
+                    ${trendHtml}
+                </div>
+                <div class="stat-card-icon-wrapper">
+                    <i class="bi ${escapeHtml(icon)}"></i>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 // Auto-initialize Bootstrap components on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
     // Tooltips
