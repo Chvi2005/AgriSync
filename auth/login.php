@@ -143,14 +143,14 @@ require_once __DIR__ . '/../includes/header.php';
                 <div class="border-top pt-3 mt-2">
                     <span class="text-muted extra-small d-block text-center mb-2 fw-semibold text-uppercase" style="font-size: 0.75rem;">Quick Demo Logins</span>
                     <div class="d-grid gap-1">
-                        <button type="button" class="btn btn-light btn-sm text-start py-1 px-2 border small" onclick="fillCreds('sunil@agrisync.lk', 'Farmer@123')">
-                            🌱 <strong>Farmer:</strong> sunil@agrisync.lk <small class="text-muted">(Farmer@123)</small>
+                        <button type="button" class="btn btn-light btn-sm text-start py-1 px-2 border small" onclick="fillCreds('farmer@agrisync.lk', 'password123')">
+                            🌱 <strong>Farmer:</strong> farmer@agrisync.lk <small class="text-muted">(password123)</small>
                         </button>
-                        <button type="button" class="btn btn-light btn-sm text-start py-1 px-2 border small" onclick="fillCreds('procurement@keells.lk', 'Business@123')">
-                            🛒 <strong>Buyer:</strong> procurement@keells.lk <small class="text-muted">(Business@123)</small>
+                        <button type="button" class="btn btn-light btn-sm text-start py-1 px-2 border small" onclick="fillCreds('buyer@agrisync.lk', 'password123')">
+                            🛒 <strong>Buyer:</strong> buyer@agrisync.lk <small class="text-muted">(password123)</small>
                         </button>
-                        <button type="button" class="btn btn-light btn-sm text-start py-1 px-2 border small" onclick="fillCreds('admin@agrisync.lk', 'Admin@123')">
-                            🛡️ <strong>Admin:</strong> admin@agrisync.lk <small class="text-muted">(Admin@123)</small>
+                        <button type="button" class="btn btn-light btn-sm text-start py-1 px-2 border small" onclick="fillCreds('admin@agrisync.lk', 'password123')">
+                            🛡️ <strong>Admin:</strong> admin@agrisync.lk <small class="text-muted">(password123)</small>
                         </button>
                     </div>
                 </div>
