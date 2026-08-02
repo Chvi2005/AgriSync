@@ -138,11 +138,13 @@ function formatCurrency(float|int|string|null $amount): string {
  */
 function getStatusBadgeClass(string $status): string {
     return match (strtolower(trim($status))) {
-        'available', 'accepted', 'completed', 'fulfilled' => 'badge-status-accepted',
-        'pending', 'proposed', 'matching'                 => 'badge-status-pending',
-        'matched', 'in transit', 'in_transit'             => 'badge-status-matched',
-        'sold', 'delivered'                               => 'badge-status-completed',
-        'rejected', 'cancelled'                           => 'badge-status-rejected',
-        default                                           => 'badge-status-secondary',
+        'pending', 'proposed'                     => 'badge-pending',
+        'matching'                                 => 'badge-matching',
+        'matched'                                  => 'badge-matched',
+        'accepted', 'available'                    => 'badge-accepted',
+        'in transit', 'in_transit'                 => 'badge-in-transit',
+        'delivered', 'sold', 'fulfilled', 'completed' => 'badge-delivered',
+        'cancelled', 'rejected'                    => 'badge-cancelled',
+        default                                    => 'badge-status-secondary',
     };
 }

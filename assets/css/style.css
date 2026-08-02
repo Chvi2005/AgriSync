@@ -119,22 +119,78 @@ h3 { font-size: 1.25rem; }
 }
 
 /* Status Badges */
-.badge-status {
-    padding: 0.4rem 0.8rem;
+.badge-status,
+.badge-pending,
+.badge-matching,
+.badge-matched,
+.badge-accepted,
+.badge-in-transit,
+.badge-delivered,
+.badge-cancelled {
+    padding: 0.4rem 0.85rem;
     border-radius: 50rem;
     font-size: 0.825rem;
     font-weight: 600;
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
+    line-height: 1.2;
 }
 
-.badge-status-pending { background-color: #FFF3CD; color: #856404; border: 1px solid #FFEBAA; }
-.badge-status-matched { background-color: #CFF4FC; color: #055160; border: 1px solid #B6EFFB; }
-.badge-status-accepted { background-color: #D1E7DD; color: #0F5132; border: 1px solid #BADBCC; }
-.badge-status-completed { background-color: var(--clr-accent-light); color: var(--clr-primary-dark); border: 1px solid var(--clr-accent); }
-.badge-status-rejected { background-color: #F8D7DA; color: #842029; border: 1px solid #F5C2C7; }
-.badge-status-secondary { background-color: #E2E3E5; color: #41464B; border: 1px solid #D3D6D8; }
+.badge-pending, .badge-status-pending { 
+    background-color: #FFF3CD; 
+    color: #856404; 
+    border: 1px solid #FFEBAA; 
+}
+
+.badge-matching { 
+    background-color: #0DCAF0; 
+    color: #000000; 
+    border: 1px solid #0DCAF0; 
+    animation: badge-pulse 1.6s infinite ease-in-out;
+}
+
+@keyframes badge-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(13, 202, 240, 0.6); }
+    70% { box-shadow: 0 0 0 8px rgba(13, 202, 240, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(13, 202, 240, 0); }
+}
+
+.badge-matched, .badge-status-matched { 
+    background-color: #CFF4FC; 
+    color: #055160; 
+    border: 1px solid #B6EFFB; 
+}
+
+.badge-accepted, .badge-status-accepted { 
+    background-color: #D1E7DD; 
+    color: #0F5132; 
+    border: 1px solid #BADBCC; 
+}
+
+.badge-in-transit { 
+    background-color: #E2D9F3; 
+    color: #4318FF; 
+    border: 1px solid #D0C2EE; 
+}
+
+.badge-delivered, .badge-status-completed { 
+    background-color: #1B4332; 
+    color: #FFFFFF; 
+    border: 1px solid #2D6A4F; 
+}
+
+.badge-cancelled, .badge-status-rejected { 
+    background-color: #F8D7DA; 
+    color: #842029; 
+    border: 1px solid #F5C2C7; 
+}
+
+.badge-status-secondary { 
+    background-color: #E2E3E5; 
+    color: #41464B; 
+    border: 1px solid #D3D6D8; 
+}
 
 /* Sidebar Navigation */
 .sidebar {
