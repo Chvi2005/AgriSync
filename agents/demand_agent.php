@@ -49,7 +49,7 @@ class DemandAgent {
                 'current_market_supply' => $supplyStats
             ];
 
-            AgentLogger::log('demand_predictor', '1. Ingested Demand Query', null, $context);
+            AgentLogger::log('demand_predictor', '1. Ingested Demand Query', null, $context, $this->db);
 
             // 2. Call Gemini AI for contextual forecasting
             $aiForecast = $this->runGeminiPrediction($context);
@@ -64,7 +64,7 @@ class DemandAgent {
                 'confidence' => $aiForecast['confidence_score'],
                 'used_gemini' => $aiForecast['used_gemini'],
                 'execution_time_ms' => $executionTimeMs
-            ]);
+            ], $this->db);
 
             return [
                 'success' => true,
@@ -83,7 +83,7 @@ class DemandAgent {
             ];
 
         } catch (Throwable $e) {
-            AgentLogger::log('demand_predictor', 'Error in Demand Prediction', null, ['error' => $e->getMessage()]);
+            AgentLogger::log('demand_predictor', 'Error in Demand Prediction', null, ['error' => $e->getMessage()], $this->db);
             return [
                 'success' => false,
                 'error' => 'Demand Prediction Agent error: ' . $e->getMessage()
