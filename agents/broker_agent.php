@@ -41,12 +41,12 @@ class BrokerAgent {
             // =========================================================================
             $order = $this->fetchOrder($orderId);
             if (!$order) {
-                AgentLogger::log('broker', 'Order Validation Failed', $orderId, ['error' => 'Order not found']);
+                AgentLogger::log('broker', 'Order Validation Failed', $orderId, ['error' => 'Order not found'], $this->db);
                 return ['success' => false, 'matched' => false, 'error' => "Order #{$orderId} not found"];
             }
 
             if (!in_array($order['status'], ['pending', 'matching'])) {
-                AgentLogger::log('broker', 'Order Status Check', $orderId, ['status' => $order['status'], 'message' => 'Order already processed or cancelled']);
+                AgentLogger::log('broker', 'Order Status Check', $orderId, ['status' => $order['status'], 'message' => 'Order already processed or cancelled'], $this->db);
                 return ['success' => false, 'matched' => false, 'error' => "Order is already in '{$order['status']}' state"];
             }
 
@@ -60,7 +60,7 @@ class BrokerAgent {
                 'delivery_date' => $order['delivery_date'],
                 'business_name' => $order['business_name'],
                 'district' => $order['business_district']
-            ]);
+            ], $this->db);
 
             // =========================================================================
             // STEP 2: Query Candidate Harvest Listings
@@ -71,13 +71,13 @@ class BrokerAgent {
                 'crop_queried' => $order['crop_type'],
                 'candidates_found_count' => count($candidates),
                 'candidate_ids' => array_column($candidates, 'id')
-            ]);
+            ], $this->db);
 
             if (empty($candidates)) {
                 $this->updateOrderStatus($orderId, 'pending');
                 AgentLogger::log('broker', '2b. No Matching Listings Available', $orderId, [
                     'message' => 'No active harvest listings found matching crop criteria'
-                ]);
+                ], $this->db);
                 return [
                     'success' => true,
                     'matched' => false,
@@ -94,7 +94,7 @@ class BrokerAgent {
 
             AgentLogger::log('broker', '3. Proximity & Fair-Trade Evaluation', $orderId, [
                 'evaluated_candidates' => $evaluatedCandidates
-            ]);
+            ], $this->db);
 
             // =========================================================================
             // STEP 4: Gemini AI Multi-Factor Matching & Reasoning
@@ -110,7 +110,7 @@ class BrokerAgent {
                 'reasoning' => $aiDecision['agent_reasoning'],
                 'used_ai' => $aiDecision['used_gemini'],
                 'execution_time_ms' => $executionTimeMs
-            ]);
+            ], $this->db);
 
             // =========================================================================
             // STEP 5: Create Match Record & Update System State
@@ -161,7 +161,7 @@ class BrokerAgent {
                 'farmer_id' => $selectedCandidate['farmer_id'],
                 'business_id' => $order['business_id'],
                 'matched_price' => $aiDecision['recommended_price_per_kg']
-            ]);
+            ], $this->db);
 
             return [
                 'success' => true,
@@ -184,7 +184,7 @@ class BrokerAgent {
             ];
 
         } catch (Throwable $e) {
-            AgentLogger::log('broker', 'Fatal Error in Broker Agent', $orderId, ['error' => $e->getMessage()]);
+            AgentLogger::log('broker', 'Fatal Error in Broker Agent', $orderId, ['error' => $e->getMessage()], $this->db);
             return [
                 'success' => false,
                 'matched' => false,
