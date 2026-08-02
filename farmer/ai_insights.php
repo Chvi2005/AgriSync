@@ -303,9 +303,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                 });
 
-                const res = await response.json();
+                const rawText = await response.text();
+                let res;
+                try {
+                    res = JSON.parse(rawText);
+                } catch (parseErr) {
+                    throw new Error(`Server returned unexpected response (HTTP ${response.status}).`);
+                }
 
-                if (res.success && res.data && res.data.forecast) {
+                if (res && res.success && res.data && res.data.forecast) {
                     const f = res.data.forecast;
                     const stats = res.data.market_stats || {};
 
@@ -351,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     loadingState.classList.remove('d-flex');
                     resultState.classList.remove('d-none');
                 } else {
-                    throw new Error(res.error || 'Failed to fetch AI forecast.');
+                    throw new Error(res?.error || 'Failed to fetch AI forecast.');
                 }
             } catch (err) {
                 alert('Error running AI demand prediction: ' + err.message);
