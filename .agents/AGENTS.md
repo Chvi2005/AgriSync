@@ -93,6 +93,34 @@
 4. **Never commit API keys** — use `config/constants.example.php`
 5. **Always test locally** before pushing
 
+## Standard Dashboard Layout Structure (MANDATORY)
+
+All dashboard pages MUST follow this standard layout pattern:
+
+```html
+<?php require_once '../includes/header.php'; ?>
+<?php require_once '../includes/navbar.php'; ?>
+
+<div class="container-fluid dashboard-wrapper">
+    <div class="row">
+        <!-- Sidebar Navigation (col-md-3 col-lg-2) -->
+        <?php require_once '../includes/sidebar.php'; ?>
+
+        <!-- Main Content Area (col-md-9 col-lg-10) -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+            <!-- Page Content Here -->
+        </main>
+    </div>
+</div>
+
+<?php require_once '../includes/footer.php'; ?>
+```
+
+- **Navbar**: Top header navigation bar with user profile & notifications.
+- **Sidebar**: `col-md-3 col-lg-2` navigation drawer (collapsible on mobile).
+- **Main Content**: `col-md-9 col-lg-10` independently scrolling content area.
+- **Footer**: Global scripts and modal containers.
+
 ## File Organization
 
 ```

@@ -192,12 +192,17 @@ h3 { font-size: 1.25rem; }
     border: 1px solid #D3D6D8; 
 }
 
-/* Sidebar Navigation */
+/* Sidebar & Main Content Dashboard Grid Layout */
+.dashboard-wrapper {
+    min-height: calc(100vh - 56px);
+}
+
 .sidebar {
-    min-height: 100vh;
+    min-height: calc(100vh - 56px);
     background: #ffffff;
     border-right: 1px solid var(--clr-border);
     transition: var(--transition-fast);
+    z-index: 100;
 }
 
 .sidebar .nav-link {
@@ -219,6 +224,25 @@ h3 { font-size: 1.25rem; }
 .sidebar .nav-link.active {
     color: #ffffff;
     background-color: var(--clr-primary);
+    font-weight: 600;
+}
+
+.main-content {
+    background-color: var(--clr-bg);
+    min-height: calc(100vh - 56px);
+    padding: 1.75rem 1.5rem;
+}
+
+@media (max-width: 767.98px) {
+    .sidebar {
+        min-height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--clr-border);
+    }
+    .main-content {
+        padding: 1rem;
+        min-height: auto;
+    }
 }
 
 /* AI Agent Animation & Card Styles */
