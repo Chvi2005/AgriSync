@@ -38,27 +38,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try {
             $db = getDbConnection();
-            $stmt = $db->prepare("SELECT id, name, email, password_hash, role, district, phone FROM users WHERE email = :email LIMIT 1");
+            $stmt = $db->prepare("SELECT id, name, email, password_hash, role, district, phone, is_active FROM users WHERE email = :email LIMIT 1");
             $stmt->execute([':email' => $email_val]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && password_verify($password, $user['password_hash'])) {
-                // Set session data
-                $_SESSION['user_id'] = (int) $user['id'];
-                $_SESSION['user_name'] = $user['name'];
-                $_SESSION['user_email'] = $user['email'];
-                $_SESSION['user_role'] = $user['role'];
-                $_SESSION['user_district'] = $user['district'] ?? 'Dambulla';
-                $_SESSION['user_phone'] = $user['phone'] ?? '';
+                if (isset($user['is_active']) && (int)$user['is_active'] === 0) {
+                    $error = 'Your account has been deactivated. Please contact platform support.';
+                } else {
+                    // Set session data
+                    $_SESSION['user_id'] = (int) $user['id'];
+                    $_SESSION['user_name'] = $user['name'];
+                    $_SESSION['user_email'] = $user['email'];
+                    $_SESSION['user_role'] = $user['role'];
+                    $_SESSION['user_district'] = $user['district'] ?? 'Dambulla';
+                    $_SESSION['user_phone'] = $user['phone'] ?? '';
+                    $_SESSION['last_activity'] = time();
 
-                $app_url = defined('APP_URL') ? APP_URL : '';
-                $target = match($user['role']) {
-                    'farmer' => $app_url . '/farmer/dashboard.php',
-                    'business' => $app_url . '/business/dashboard.php',
-                    'admin' => $app_url . '/admin/dashboard.php',
-                    default => $app_url . '/index.php'
-                };
-                redirect($target);
+                    $app_url = defined('APP_URL') ? APP_URL : '';
+                    $target = match($user['role']) {
+                        'farmer' => $app_url . '/farmer/dashboard.php',
+                        'business' => $app_url . '/business/dashboard.php',
+                        'admin' => $app_url . '/admin/dashboard.php',
+                        default => $app_url . '/index.php'
+                    };
+                    redirect($target);
+                }
             } else {
                 $error = 'Invalid email address or password.';
             }
