@@ -29,7 +29,7 @@ jobs:
       - name: Check Security Standards (Pattern Match)
         run: |
           echo "Checking for raw SQL concatenation..."
-          if grep -rni "SELECT .*'" ./api ./auth ./farmer ./business ./admin; then
+          if grep -rnE '(SELECT|INSERT INTO|UPDATE|DELETE FROM)[^;]*\.[[:space:]]*\$' ./api ./auth ./farmer ./business ./admin; then
             echo "::error::Possible raw SQL concatenation found. Use PDO prepared statements."
             exit 1
           fi
