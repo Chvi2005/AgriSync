@@ -27,7 +27,8 @@ class GeminiClient {
         // Prioritized fallback models in case primary encounters 404, 429 rate limit, or maintenance
         $this->fallbackModels = [
             'gemini-2.5-flash',
-            'gemini-flash-latest'
+            'gemini-flash-latest',
+            'gemini-2.0-flash'
         ];
     }
 
