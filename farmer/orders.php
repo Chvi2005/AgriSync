@@ -2,6 +2,7 @@
 // AgriSync Farmer Order Matches Page (TASK-010)
 $page_title = 'Matched Orders';
 require_once __DIR__ . '/../config/session.php';
+require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../auth/auth_check.php';
 checkRole(['farmer']);
 
