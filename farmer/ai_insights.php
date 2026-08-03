@@ -67,7 +67,7 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
                 <div class="mt-3 mt-md-0">
                     <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">
-                        <i class="bi bi-stars me-1"></i> Powered by Google Gemini 1.5 Flash
+                        <i class="bi bi-stars me-1"></i> Powered by Google Gemini 2.5 Flash
                     </span>
                 </div>
             </div>

@@ -95,11 +95,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <!-- Right Nav Controls: Notifications & User Profile -->
             <div class="d-flex align-items-center gap-3">
                 <?php if (isLoggedIn()): ?>
-                    <!-- Dark Mode Toggle -->
-                    <button class="btn btn-outline-light border-0 rounded-circle p-2 me-1" type="button" id="darkModeToggle" aria-label="Toggle Dark Mode" title="Toggle Dark Mode">
-                        <i class="bi bi-moon-stars fs-5" id="darkModeIcon"></i>
-                    </button>
-
                     <!-- Notifications Dropdown -->
                     <div class="dropdown" id="notificationDropdownContainer">
                         <button class="btn btn-outline-light position-relative border-0 rounded-circle p-2" type="button" id="notifDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false">
@@ -156,34 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const notifBadge = document.getElementById('notifBadge');
     const notifList = document.getElementById('notifList');
     const markAllReadBtn = document.getElementById('markAllReadBtn');
-    
-    // Dark Mode Toggle Logic
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    const darkModeIcon = document.getElementById('darkModeIcon');
-    
-    function updateDarkModeIcon(theme) {
-        if (!darkModeIcon) return;
-        if (theme === 'dark') {
-            darkModeIcon.classList.remove('bi-moon-stars');
-            darkModeIcon.classList.add('bi-sun');
-        } else {
-            darkModeIcon.classList.remove('bi-sun');
-            darkModeIcon.classList.add('bi-moon-stars');
-        }
-    }
-    
-    if (darkModeToggle) {
-        const currentTheme = document.documentElement.getAttribute('data-bs-theme');
-        updateDarkModeIcon(currentTheme);
-        
-        darkModeToggle.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-bs-theme');
-            const target = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-bs-theme', target);
-            localStorage.setItem('agrisync-theme', target);
-            updateDarkModeIcon(target);
-        });
-    }
 
     async function loadNotifications() {
         if (!notifList) return;

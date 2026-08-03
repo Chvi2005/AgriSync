@@ -108,7 +108,7 @@ require_once __DIR__ . '/../includes/navbar.php';
                                 <tr class="border-bottom">
                                     <td class="text-muted py-2">Target Model</td>
                                     <td class="fw-semibold text-end">
-                                        <code><?= htmlspecialchars(defined('GEMINI_MODEL') ? GEMINI_MODEL : 'gemini-1.5-flash', ENT_QUOTES, 'UTF-8') ?></code>
+                                        <code><?= htmlspecialchars(defined('GEMINI_MODEL') ? GEMINI_MODEL : 'gemini-2.5-flash', ENT_QUOTES, 'UTF-8') ?></code>
                                     </td>
                                 </tr>
                                 <tr class="border-bottom">

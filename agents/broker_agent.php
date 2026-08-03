@@ -5,7 +5,7 @@
  * 1. Order Ingestion & State Validation
  * 2. Harvest Listings Database Query
  * 3. District Proximity & Fair-Trade Guardrail Filtering
- * 4. Google Gemini 1.5 Flash AI Reasoning & Evaluation (with algorithmic fallback)
+ * 4. Google Gemini 2.5 Flash AI Reasoning & Evaluation (with algorithmic fallback)
  * 5. Order Match Creation & Status Transitions
  * 6. Audit Logging to agent_logs table & In-App Notifications
  */

@@ -2,7 +2,7 @@
 /**
  * AgriSync — AI Demand Prediction Agent (TASK-064 & TASK-065)
  * Analyzes agricultural cycles (Maha/Yala), historical platform orders, supply volume, 
- * and regional agro-ecological zones in Sri Lanka using Gemini 1.5 Flash.
+ * and regional agro-ecological zones in Sri Lanka using Gemini 2.5 Flash.
  */
 
 if (!defined('APP_NAME')) {
