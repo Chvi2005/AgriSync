@@ -54,6 +54,7 @@ try {
 }
 
 require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../includes/navbar.php';
 ?>
 
 <div class="d-flex" style="min-height: 100vh;">
