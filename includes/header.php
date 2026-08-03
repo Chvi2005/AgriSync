@@ -20,6 +20,17 @@ $app_url = defined('APP_URL') ? APP_URL : '';
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        // Dark Mode Initialization (TASK-102)
+        const storedTheme = localStorage.getItem('agrisync-theme');
+        const getPreferredTheme = () => {
+            if (storedTheme) {
+                return storedTheme;
+            }
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        };
+        document.documentElement.setAttribute('data-bs-theme', getPreferredTheme());
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
