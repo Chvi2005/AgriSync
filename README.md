@@ -206,6 +206,15 @@ In accordance with the **IDEALIZE 2026 Prototype Submission Guidelines** (*"Any 
 5. **Zero-Configuration Portability & Robust Evaluation**:
    - The final PHP 8 & MySQL architecture runs seamlessly using PHP's built-in web server (`php -S localhost:8000`) and standard MySQL with zero npm/node build dependencies, ensuring judges and reviewers can effortlessly clone, configure, run, and evaluate the entire application in under 2 minutes.
 
+### 🔮 Future Plans & Next Phase Enhancements
+
+As per our original proposal, we envisioned three autonomous agents. While we successfully implemented the **Demand Prediction Agent** and **Broker Agent**, we made the strategic decision to defer the **Logistics Agent** to the next phase of development. 
+
+1. **The Logistics Agent (Phase 2)**: 
+   - We will introduce our third AI agent which will automatically trigger when a farmer accepts a match. It will use the **Google Maps Route Optimization API** and **Twilio SMS API** to autonomously ping freelance truck drivers and negotiate delivery rates. This requires real-world driver data and API quotas which we plan to acquire post-prototype.
+2. **Mobile Expansion (Phase 2)**:
+   - While the current platform is fully responsive for mobile browsers (Bootstrap 5), we plan to launch a dedicated vernacular Android app (via React Native/Expo) specifically tailored for farmers who might have limited digital literacy, streamlining their harvest listing process even further.
+
 ---
 
 ## 🚀 Installation & Quick Start Guide
