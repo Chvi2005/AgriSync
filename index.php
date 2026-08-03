@@ -48,7 +48,6 @@ $app_url = defined('APP_URL') ? APP_URL : '';
             <div class="collapse navbar-collapse" id="navbarContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-2">
                     <li class="nav-item"><a class="nav-link text-dark fw-medium" href="#features">AI Features</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark fw-medium" href="#how-it-works">How It Works</a></li>
                     <li class="nav-item"><a class="nav-link text-dark fw-medium" href="#sdg-impact">SDG Impact</a></li>
                 </ul>
 
