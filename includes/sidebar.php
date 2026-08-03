@@ -73,7 +73,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= in_array($current_page, ['marketplace.php', 'place_order.php'], true) ? 'active' : '' ?>" href="<?= $app_url ?>/business/marketplace.php">
+                    <a class="nav-link <?= in_array($current_page, ['browse.php', 'place_order.php'], true) ? 'active' : '' ?>" href="<?= $app_url ?>/business/browse.php">
                         <i class="bi bi-shop"></i>
                         <span>Produce Market</span>
                     </a>
