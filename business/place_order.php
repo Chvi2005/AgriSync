@@ -22,6 +22,7 @@ $prefill_max_price = isset($_GET['max_price']) ? (float)$_GET['max_price'] : '';
 $crops = ['Tomato', 'Carrot', 'Big Onion', 'Bell Pepper', 'Potato', 'Cabbage', 'Leeks', 'Green Beans', 'Green Chili', 'Banana', 'Papaya', 'Pumpkin', 'Brinjal'];
 
 require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../includes/navbar.php';
 ?>
 
 <div class="d-flex" style="min-height: 100vh;">
