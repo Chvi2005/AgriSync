@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `harvest_listings` (
   `quantity_kg` decimal(10,2) NOT NULL,
   `price_per_kg` decimal(10,2) NOT NULL,
   `harvest_date` date NOT NULL,
-  `status` enum('available','matched','sold') NOT NULL DEFAULT 'available',
+  `status` enum('available','matched','sold','expired') NOT NULL DEFAULT 'available',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
