@@ -19,7 +19,7 @@ $user_id = (int) ($_SESSION['user_id'] ?? 0);
 $prefill_crop = sanitize($_GET['crop'] ?? '');
 $prefill_max_price = isset($_GET['max_price']) ? (float)$_GET['max_price'] : '';
 
-$crops = ['Tomato', 'Carrot', 'Big Onion', 'Bell Pepper', 'Potato', 'Cabbage', 'Leeks', 'Green Beans', 'Green Chili', 'Banana', 'Papaya', 'Pumpkin', 'Brinjal'];
+$crops = AGRISYNC_CROPS;
 
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/navbar.php';

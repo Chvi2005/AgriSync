@@ -94,17 +94,9 @@ require_once __DIR__ . '/../includes/navbar.php';
                                     <span class="input-group-text bg-light border-end-0 rounded-start-3"><i class="bi bi-tree text-success"></i></span>
                                     <select class="form-select border-start-0 rounded-end-3" id="cropType" name="crop_type" required>
                                         <option value="" disabled>Select target crop...</option>
-                                        <option value="Tomato" selected>Tomato</option>
-                                        <option value="Carrot">Carrot</option>
-                                        <option value="Big Onion">Big Onion</option>
-                                        <option value="Bell Pepper">Bell Pepper</option>
-                                        <option value="Potato">Potato</option>
-                                        <option value="Cabbage">Cabbage</option>
-                                        <option value="Leeks">Leeks</option>
-                                        <option value="Green Beans">Green Beans</option>
-                                        <option value="Green Chili">Green Chili</option>
-                                        <option value="Banana">Banana</option>
-                                        <option value="Papaya">Papaya</option>
+                                        <?php foreach (AGRISYNC_CROPS as $c): ?>
+                                            <option value="<?= $c ?>" <?= $c === 'Tomato' ? 'selected' : '' ?>><?= $c ?></option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
                             </div>

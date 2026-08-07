@@ -29,3 +29,10 @@ define('APP_URL', rtrim($protocol . $host . $subDir, '/'));
 define('APP_NAME', 'AgriSync');
 define('FAIR_TRADE_MIN_MULTIPLIER', 1.2); // Minimum 20% margin above base cost
 define('APP_ENV', 'development'); // 'development' or 'production'
+
+// Standardized Crop Catalog
+define('AGRISYNC_CROPS', [
+    'Tomato', 'Carrot', 'Big Onion', 'Bell Pepper', 'Potato', 
+    'Cabbage', 'Leeks', 'Green Beans', 'Green Chili', 'Banana', 
+    'Papaya', 'Pumpkin', 'Brinjal'
+]);

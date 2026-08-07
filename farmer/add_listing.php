@@ -17,7 +17,7 @@ $user_id = (int) ($_SESSION['user_id'] ?? 0);
 $error = '';
 $success = '';
 
-$crops = ['Tomato', 'Carrot', 'Big Onion', 'Bell Pepper', 'Potato', 'Cabbage', 'Leeks', 'Green Beans', 'Green Chili', 'Banana', 'Papaya', 'Pumpkin', 'Brinjal'];
+$crops = AGRISYNC_CROPS;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $crop_type = trim($_POST['crop_type'] ?? '');

@@ -218,6 +218,7 @@ class BrokerAgent {
             FROM harvest_listings h
             JOIN users u ON h.farmer_id = u.id
             WHERE h.status = 'available'
+              AND h.harvest_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
               AND LOWER(h.crop_type) = LOWER(:crop_type)
               AND h.quantity_kg > 0
               AND h.price_per_kg <= :max_price
