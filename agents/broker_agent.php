@@ -129,6 +129,12 @@ class BrokerAgent {
                 $aiDecision['selected_listing_id'] = $selectedCandidate['id'];
             }
 
+            // Optimistic Concurrency Control: Secure listing before finalizing
+            $listingSecured = $this->secureListing((int) $selectedCandidate['id']);
+            if (!$listingSecured) {
+                throw new Exception("Race condition detected: The selected harvest listing was just purchased by another buyer while the AI was negotiating. Please try again.");
+            }
+
             $matchId = $this->createOrderMatch(
                 $orderId,
                 (int) $selectedCandidate['id'],
@@ -141,7 +147,6 @@ class BrokerAgent {
 
             // Update statuses
             $this->updateOrderStatus($orderId, 'matched');
-            $this->updateListingStatus((int) $selectedCandidate['id'], 'matched');
 
             // Send In-App Notifications
             $this->createNotification(
@@ -495,6 +500,16 @@ class BrokerAgent {
     private function updateListingStatus(int $listingId, string $status): void {
         $stmt = $this->db->prepare("UPDATE harvest_listings SET status = :status WHERE id = :id");
         $stmt->execute([':status' => $status, ':id' => $listingId]);
+    }
+
+    /**
+     * Atomically secures a listing for matching to prevent race conditions.
+     * Returns true if successfully secured, false if it was already taken.
+     */
+    private function secureListing(int $listingId): bool {
+        $stmt = $this->db->prepare("UPDATE harvest_listings SET status = 'matched' WHERE id = :id AND status = 'available'");
+        $stmt->execute([':id' => $listingId]);
+        return $stmt->rowCount() > 0;
     }
 
     private function createNotification(int $userId, string $message, string $link): void {
