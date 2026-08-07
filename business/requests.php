@@ -82,14 +82,9 @@ require_once __DIR__ . '/../includes/navbar.php';
                         <label for="crop_type" class="form-label fw-medium text-secondary">Required Crop Type</label>
                         <select class="form-select" id="crop_type" name="crop_type" required>
                             <option value="" disabled selected>Select Crop Type</option>
-                            <option value="Carrot">Carrot</option>
-                            <option value="Leek">Leek</option>
-                            <option value="Tomato">Tomato</option>
-                            <option value="Potato">Potato</option>
-                            <option value="Cabbage">Cabbage</option>
-                            <option value="Onion">Onion</option>
-                            <option value="Green Chilli">Green Chilli</option>
-                            <option value="Paddy">Paddy / Rice</option>
+                            <?php foreach (AGRISYNC_CROPS as $c): ?>
+                                <option value="<?= $c ?>"><?= $c ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
 
