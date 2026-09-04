@@ -83,4 +83,12 @@ INSERT INTO `notifications` (`id`, `user_id`, `message`, `link`, `is_read`, `cre
 (4, 8, 'System Health Check: 4 autonomous Gemini AI agent workers active and operational.', '/admin/agent_logs.php', 0, NOW(), NOW())
 ON DUPLICATE KEY UPDATE `updated_at` = NOW();
 
+-- --------------------------------------------------------
+-- 8. Seed Admin Audit Logs
+-- --------------------------------------------------------
+INSERT INTO `admin_audit_logs` (`id`, `admin_id`, `action`, `target_id`, `details`, `ip_address`, `created_at`) VALUES
+(1, 8, 'deactivate_user', 4, 'Deactivated user #4 (Tharindu Jayasuriya) pending document verification.', '127.0.0.1', DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(2, 8, 'activate_user', 4, 'Re-activated user #4 (Tharindu Jayasuriya) following identity verification.', '127.0.0.1', NOW())
+ON DUPLICATE KEY UPDATE `created_at` = NOW();
+
 COMMIT;
