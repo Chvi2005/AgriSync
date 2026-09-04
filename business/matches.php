@@ -28,10 +28,12 @@ try {
             m.id as match_id, m.order_id, m.farmer_id, m.matched_price, m.confidence_score, 
             m.agent_reasoning, m.status as match_status, m.created_at as matched_date,
             o.crop_type, o.quantity_kg, o.max_price as requested_max_price, o.delivery_date,
-            u.name as farmer_name, u.district as farmer_district, u.phone as farmer_phone
+            u.name as farmer_name, u.district as farmer_district, u.phone as farmer_phone,
+            p.status as payment_status, p.payhere_payment_id
         FROM order_matches m
         JOIN order_requests o ON m.order_id = o.id
         JOIN users u ON m.farmer_id = u.id
+        LEFT JOIN payments p ON m.id = p.order_match_id
         WHERE m.business_id = :business_id
     ";
     $params = [':business_id' => $user_id];
@@ -174,17 +176,33 @@ require_once __DIR__ . '/../includes/navbar.php';
                                 </div>
 
                                 <!-- Action Buttons -->
-                                <div class="mt-auto d-flex gap-2 justify-content-end border-top pt-3">
-                                    <?php if ($deal['match_status'] === 'proposed'): ?>
-                                        <button type="button" class="btn btn-outline-danger btn-sm rounded-3 px-3">Decline</button>
-                                        <button type="button" class="btn btn-success btn-sm rounded-3 px-4 shadow-sm" onclick="acceptDeal(<?= (int)$deal['match_id'] ?>)">
-                                            <i class="bi bi-check-circle-fill me-1"></i> Accept Deal & Lock
-                                        </button>
-                                    <?php else: ?>
-                                        <span class="text-success small fw-semibold d-flex align-items-center">
-                                            <i class="bi bi-patch-check-fill me-1"></i> Direct contract locked
-                                        </span>
-                                    <?php endif; ?>
+                                <div class="mt-auto d-flex flex-wrap gap-2 justify-content-between align-items-center border-top pt-3">
+                                    <div>
+                                        <?php if ($deal['payment_status'] === 'paid'): ?>
+                                            <span class="badge bg-success-subtle text-success border border-success px-2 py-1 small">
+                                                <i class="bi bi-shield-lock-fill me-1"></i> Escrow Paid
+                                            </span>
+                                        <?php elseif ($deal['payment_status'] === 'escrow_released'): ?>
+                                            <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1 small">
+                                                <i class="bi bi-check-all me-1"></i> Escrow Released
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="badge bg-light text-muted border px-2 py-1 small">
+                                                <i class="bi bi-clock me-1"></i> Escrow Pending
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <?php if ($deal['payment_status'] === 'paid' || $deal['payment_status'] === 'escrow_released'): ?>
+                                            <a href="checkout.php?match_id=<?= (int)$deal['match_id'] ?>" class="btn btn-outline-success btn-sm rounded-3 px-3">
+                                                <i class="bi bi-receipt me-1"></i> Escrow Receipt
+                                            </a>
+                                        <?php else: ?>
+                                            <a href="checkout.php?match_id=<?= (int)$deal['match_id'] ?>" class="btn btn-success btn-sm rounded-3 px-3 shadow-sm" style="background-color: #2D6A4F; border-color: #2D6A4F;">
+                                                <i class="bi bi-credit-card-fill me-1"></i> Pay via PayHere Escrow
+                                            </a>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
 
                             </div>

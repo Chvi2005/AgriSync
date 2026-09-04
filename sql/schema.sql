@@ -176,4 +176,22 @@ CREATE TABLE IF NOT EXISTS `admin_audit_logs` (
   CONSTRAINT `fk_audit_admin` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+-- Table structure for table `payments`
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `payments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_match_id` int(11) NOT NULL,
+  `payhere_payment_id` varchar(100) DEFAULT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `status` enum('pending','paid','escrow_released','failed') NOT NULL DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `order_match_id_index` (`order_match_id`),
+  KEY `status_index` (`status`),
+  CONSTRAINT `fk_payment_match` FOREIGN KEY (`order_match_id`) REFERENCES `order_matches` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 COMMIT;
+

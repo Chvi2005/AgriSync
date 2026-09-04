@@ -91,4 +91,13 @@ INSERT INTO `admin_audit_logs` (`id`, `admin_id`, `action`, `target_id`, `detail
 (2, 8, 'activate_user', 4, 'Re-activated user #4 (Tharindu Jayasuriya) following identity verification.', '127.0.0.1', NOW())
 ON DUPLICATE KEY UPDATE `created_at` = NOW();
 
+-- --------------------------------------------------------
+-- 9. Seed Payments (PayHere Escrow Transactions)
+-- --------------------------------------------------------
+INSERT INTO `payments` (`id`, `order_match_id`, `payhere_payment_id`, `amount`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, '320025810012', 192000.00, 'paid', NOW(), NOW()),
+(2, 2, '320025810013', 144000.00, 'escrow_released', NOW(), NOW())
+ON DUPLICATE KEY UPDATE `updated_at` = NOW();
+
 COMMIT;
+
