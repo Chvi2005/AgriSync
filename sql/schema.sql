@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS `harvest_listings` (
   `farmer_id` int(11) NOT NULL,
   `crop_type` varchar(50) NOT NULL,
   `quantity_kg` decimal(10,2) NOT NULL,
+  `min_order_quantity` decimal(10,2) NOT NULL DEFAULT 0.00,
   `price_per_kg` decimal(10,2) NOT NULL,
   `harvest_date` date NOT NULL,
   `status` enum('available','matched','sold','expired') NOT NULL DEFAULT 'available',

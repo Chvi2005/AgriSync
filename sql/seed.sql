@@ -34,14 +34,14 @@ ON DUPLICATE KEY UPDATE `updated_at` = NOW();
 -- --------------------------------------------------------
 -- 3. Seed Harvest Listings
 -- --------------------------------------------------------
-INSERT INTO `harvest_listings` (`id`, `farmer_id`, `crop_type`, `quantity_kg`, `price_per_kg`, `harvest_date`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Carrot', 1500.00, 210.00, DATE_ADD(CURRENT_DATE, INTERVAL 3 DAY), 'available', NOW(), NOW()),
-(2, 1, 'Potato', 2500.00, 180.00, DATE_ADD(CURRENT_DATE, INTERVAL 5 DAY), 'available', NOW(), NOW()),
-(3, 2, 'Tomato', 800.00, 240.00, DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY), 'matched', NOW(), NOW()),
-(4, 2, 'Leek', 1200.00, 195.00, DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY), 'available', NOW(), NOW()),
-(5, 1, 'Cabbage', 900.00, 160.00, DATE_SUB(CURRENT_DATE, INTERVAL 2 DAY), 'sold', NOW(), NOW()),
-(6, 3, 'Capsicum', 650.00, 320.00, DATE_ADD(CURRENT_DATE, INTERVAL 4 DAY), 'available', NOW(), NOW()),
-(7, 4, 'Red Onion', 3000.00, 290.00, DATE_ADD(CURRENT_DATE, INTERVAL 6 DAY), 'available', NOW(), NOW())
+INSERT INTO `harvest_listings` (`id`, `farmer_id`, `crop_type`, `quantity_kg`, `min_order_quantity`, `price_per_kg`, `harvest_date`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Carrot', 1500.00, 100.00, 210.00, DATE_ADD(CURRENT_DATE, INTERVAL 3 DAY), 'available', NOW(), NOW()),
+(2, 1, 'Potato', 2500.00, 200.00, 180.00, DATE_ADD(CURRENT_DATE, INTERVAL 5 DAY), 'available', NOW(), NOW()),
+(3, 2, 'Tomato', 800.00, 50.00, 240.00, DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY), 'matched', NOW(), NOW()),
+(4, 2, 'Leek', 1200.00, 100.00, 195.00, DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY), 'available', NOW(), NOW()),
+(5, 1, 'Cabbage', 900.00, 50.00, 160.00, DATE_SUB(CURRENT_DATE, INTERVAL 2 DAY), 'sold', NOW(), NOW()),
+(6, 3, 'Capsicum', 650.00, 50.00, 320.00, DATE_ADD(CURRENT_DATE, INTERVAL 4 DAY), 'available', NOW(), NOW()),
+(7, 4, 'Red Onion', 3000.00, 500.00, 290.00, DATE_ADD(CURRENT_DATE, INTERVAL 6 DAY), 'available', NOW(), NOW())
 ON DUPLICATE KEY UPDATE `updated_at` = NOW();
 
 -- --------------------------------------------------------

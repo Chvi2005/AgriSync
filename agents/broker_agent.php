@@ -65,7 +65,7 @@ class BrokerAgent {
             // =========================================================================
             // STEP 2: Query Candidate Harvest Listings
             // =========================================================================
-            $candidates = $this->searchCandidateListings($order['crop_type'], (float) $order['max_price']);
+            $candidates = $this->searchCandidateListings($order['crop_type'], (float) $order['max_price'], (float) $order['quantity_kg']);
 
             AgentLogger::log('broker', '2. Database Candidate Search', $orderId, [
                 'crop_queried' => $order['crop_type'],
@@ -217,7 +217,7 @@ class BrokerAgent {
     /**
      * Search available harvest listings
      */
-    private function searchCandidateListings(string $cropType, float $maxPrice): array {
+    private function searchCandidateListings(string $cropType, float $maxPrice, float $orderQuantity = 0.0): array {
         $stmt = $this->db->prepare("
             SELECT h.*, u.name AS farmer_name, u.district AS farmer_district, u.phone AS farmer_phone
             FROM harvest_listings h
@@ -227,12 +227,14 @@ class BrokerAgent {
               AND LOWER(h.crop_type) = LOWER(:crop_type)
               AND h.quantity_kg > 0
               AND h.price_per_kg <= :max_price
+              AND h.min_order_quantity <= :order_quantity
             ORDER BY h.price_per_kg ASC, h.harvest_date ASC
             LIMIT 10
         ");
         $stmt->execute([
             ':crop_type' => trim($cropType),
-            ':max_price' => $maxPrice
+            ':max_price' => $maxPrice,
+            ':order_quantity' => $orderQuantity
         ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
