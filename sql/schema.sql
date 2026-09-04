@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `role` enum('farmer','business','admin') NOT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `district` varchar(50) DEFAULT NULL,
+  `nic_number` varchar(20) DEFAULT NULL,
+  `business_reg_no` varchar(50) DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

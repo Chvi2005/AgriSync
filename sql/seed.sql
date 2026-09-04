@@ -10,15 +10,15 @@ USE `agrisync`;
 -- --------------------------------------------------------
 -- 1. Seed Users (Demo Accounts)
 -- --------------------------------------------------------
-INSERT INTO `users` (`id`, `name`, `email`, `password_hash`, `role`, `phone`, `district`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'Bandara Herath', 'farmer@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'farmer', '0771234567', 'Nuwara Eliya', 1, NOW(), NOW()),
-(2, 'Somasiri Silva', 'dambulla.farmer@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'farmer', '0719876543', 'Matale', 1, NOW(), NOW()),
-(3, 'Kavinda Perera', 'badulla.farmer@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'farmer', '0765554321', 'Badulla', 1, NOW(), NOW()),
-(4, 'Tharindu Jayasuriya', 'jaffna.farmer@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'farmer', '0783332211', 'Jaffna', 1, NOW(), NOW()),
-(5, 'Keells Supermarket Procurement', 'buyer@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'business', '0112345678', 'Colombo', 1, NOW(), NOW()),
-(6, 'Cargills Food City Central Logistics', 'cargills@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'business', '0119876543', 'Gampaha', 1, NOW(), NOW()),
-(7, 'Ceylon Agro Exports Ltd', 'export@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'business', '0114445566', 'Colombo', 1, NOW(), NOW()),
-(8, 'AgriSync System Admin', 'admin@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'admin', '0703534431', 'Colombo', 1, NOW(), NOW())
+INSERT INTO `users` (`id`, `name`, `email`, `password_hash`, `role`, `phone`, `district`, `nic_number`, `business_reg_no`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'Bandara Herath', 'farmer@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'farmer', '0771234567', 'Nuwara Eliya', '851234567V', NULL, 1, NOW(), NOW()),
+(2, 'Somasiri Silva', 'dambulla.farmer@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'farmer', '0719876543', 'Matale', '199012345678', NULL, 1, NOW(), NOW()),
+(3, 'Kavinda Perera', 'badulla.farmer@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'farmer', '0765554321', 'Badulla', '923456789V', NULL, 1, NOW(), NOW()),
+(4, 'Tharindu Jayasuriya', 'jaffna.farmer@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'farmer', '0783332211', 'Jaffna', '198898765432', NULL, 1, NOW(), NOW()),
+(5, 'Keells Supermarket Procurement', 'buyer@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'business', '0112345678', 'Colombo', NULL, 'PV12345', 1, NOW(), NOW()),
+(6, 'Cargills Food City Central Logistics', 'cargills@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'business', '0119876543', 'Gampaha', NULL, 'PV67890', 1, NOW(), NOW()),
+(7, 'Ceylon Agro Exports Ltd', 'export@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'business', '0114445566', 'Colombo', NULL, 'PV99887', 1, NOW(), NOW()),
+(8, 'AgriSync System Admin', 'admin@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'admin', '0703534431', 'Colombo', '198511223344', 'ADM001', 1, NOW(), NOW())
 ON DUPLICATE KEY UPDATE `password_hash` = VALUES(`password_hash`), `updated_at` = NOW();
 
 -- --------------------------------------------------------
