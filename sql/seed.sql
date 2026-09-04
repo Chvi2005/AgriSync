@@ -58,9 +58,9 @@ ON DUPLICATE KEY UPDATE `updated_at` = NOW();
 -- --------------------------------------------------------
 -- 5. Seed Order Matches (AI Broker Autonomous Matches)
 -- --------------------------------------------------------
-INSERT INTO `order_matches` (`id`, `order_id`, `listing_id`, `farmer_id`, `business_id`, `matched_price`, `agent_reasoning`, `confidence_score`, `status`, `created_at`, `updated_at`) VALUES
-(1, 2, 3, 2, 5, 240.00, 'Gemini AI Broker matched Keells Tomato pre-order #2 with Somasiri Silva harvest listing #3. Price of Rs. 240/kg is within buyer Rs. 250/kg max budget and provides a 22% margin above base production cost. Transit route via Dambulla-Kurunegala highway optimizes logistics.', 96, 'accepted', NOW(), NOW()),
-(2, 4, 5, 1, 6, 160.00, 'Gemini AI Broker matched Cargills Cabbage order #4 with Bandara Herath listing #5. Order fulfilled, quality checked, and verified upon warehouse intake.', 98, 'completed', NOW(), NOW())
+INSERT INTO `order_matches` (`id`, `order_id`, `listing_id`, `farmer_id`, `business_id`, `matched_price`, `agent_reasoning`, `confidence_score`, `status`, `contract_agreed`, `otp_verified`, `otp_code`, `created_at`, `updated_at`) VALUES
+(1, 2, 3, 2, 5, 240.00, 'Gemini AI Broker matched Keells Tomato pre-order #2 with Somasiri Silva harvest listing #3. Price of Rs. 240/kg is within buyer Rs. 250/kg max budget and provides a 22% margin above base production cost. Transit route via Dambulla-Kurunegala highway optimizes logistics.', 96, 'accepted', 1, 1, '849201', NOW(), NOW()),
+(2, 4, 5, 1, 6, 160.00, 'Gemini AI Broker matched Cargills Cabbage order #4 with Bandara Herath listing #5. Order fulfilled, quality checked, and verified upon warehouse intake.', 98, 'completed', 1, 1, '571934', NOW(), NOW())
 ON DUPLICATE KEY UPDATE `updated_at` = NOW();
 
 -- --------------------------------------------------------
