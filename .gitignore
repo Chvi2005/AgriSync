@@ -1,6 +1,9 @@
 config/constants.php
 uploads/
+backups/*.sql
+backups/*.sql.gz
 .env
 *.log
 .DS_Store
 .vscode/
+
