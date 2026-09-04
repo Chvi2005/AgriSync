@@ -3,6 +3,7 @@
 // Returns JSON formatted response: {"success": bool, "data": array, "error": string|null}
 
 require_once __DIR__ . '/../config/session.php';
+require_once __DIR__ . '/../includes/rate_limit.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../auth/auth_check.php';
@@ -120,13 +121,50 @@ if ($action === 'get_metrics') {
     }
 
 } elseif ($action === 'get_all_orders') {
+    $status_filter = sanitize($_GET['status'] ?? 'all');
+    $crop_filter   = sanitize($_GET['crop'] ?? 'all');
+    $search        = sanitize($_GET['search'] ?? '');
+    $date_filter   = sanitize($_GET['date'] ?? '');
+
     try {
-        $stmt = $db->query("
-            SELECT o.id, o.crop_type, o.quantity_kg, o.max_price, o.delivery_date, o.urgency, o.status, o.created_at, u.name as business_name, u.district as business_district
+        $sql = "
+            SELECT o.id, o.crop_type, o.quantity_kg, o.max_price, o.delivery_date, o.urgency, o.status, o.created_at,
+                   u.name as business_name, u.district as business_district,
+                   (SELECT COUNT(*) FROM order_matches m WHERE m.order_id = o.id) as matches_count
             FROM order_requests o
             JOIN users u ON o.business_id = u.id
-            ORDER BY o.created_at DESC
-        ");
+            WHERE 1=1
+        ";
+        $params = [];
+
+        if ($status_filter !== 'all') {
+            $sql .= " AND o.status = ?";
+            $params[] = $status_filter;
+        }
+
+        if ($crop_filter !== 'all') {
+            $sql .= " AND o.crop_type = ?";
+            $params[] = $crop_filter;
+        }
+
+        if (!empty($date_filter)) {
+            $sql .= " AND o.delivery_date = ?";
+            $params[] = $date_filter;
+        }
+
+        if (!empty($search)) {
+            $sql .= " AND (o.crop_type LIKE ? OR u.name LIKE ? OR u.district LIKE ? OR CAST(o.id AS CHAR) LIKE ?)";
+            $term = "%{$search}%";
+            $params[] = $term;
+            $params[] = $term;
+            $params[] = $term;
+            $params[] = $term;
+        }
+
+        $sql .= " ORDER BY o.created_at DESC";
+        $stmt = $db->prepare($sql);
+        $stmt->execute($params);
+
         jsonResponse(true, ['orders' => $stmt->fetchAll()]);
     } catch (PDOException $e) {
         jsonResponse(false, [], 'Failed to fetch platform orders audit.', 500);

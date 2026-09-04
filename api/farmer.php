@@ -3,6 +3,7 @@
 // Returns JSON formatted response: {"success": bool, "data": array, "error": string|null}
 
 require_once __DIR__ . '/../config/session.php';
+require_once __DIR__ . '/../includes/rate_limit.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../auth/auth_check.php';
@@ -164,6 +165,73 @@ if ($action === 'get_dashboard') {
             $db->rollBack();
         }
         jsonResponse(false, [], 'Failed to record match decision.', 500);
+    }
+
+} elseif ($action === 'get_profile') {
+    try {
+        $stmt = $db->prepare("
+            SELECT u.id, u.name, u.email, u.phone, u.district,
+                   COALESCE(fp.farm_name, '') as farm_name,
+                   COALESCE(fp.location, '') as location,
+                   COALESCE(fp.primary_crops, '') as primary_crops
+            FROM users u
+            LEFT JOIN farmer_profiles fp ON u.id = fp.user_id
+            WHERE u.id = ? LIMIT 1
+        ");
+        $stmt->execute([$farmer_id]);
+        $profile = $stmt->fetch();
+        jsonResponse(true, ['profile' => $profile]);
+    } catch (PDOException $e) {
+        jsonResponse(false, [], 'Failed to fetch farmer profile.', 500);
+    }
+
+} elseif ($action === 'update_profile') {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        jsonResponse(false, [], 'Method not allowed.', 405);
+    }
+
+    $name          = sanitize($_POST['name'] ?? '');
+    $phone         = sanitize($_POST['phone'] ?? '');
+    $district      = sanitize($_POST['district'] ?? '');
+    $farm_name     = sanitize($_POST['farm_name'] ?? '');
+    $location      = sanitize($_POST['location'] ?? '');
+    $primary_crops = sanitize($_POST['primary_crops'] ?? '');
+
+    if (empty($name) || empty($phone) || empty($district)) {
+        jsonResponse(false, [], 'Full Name, Phone Number, and District are required.', 400);
+    }
+
+    try {
+        $db->beginTransaction();
+
+        // 1. Update users table
+        $stmt_u = $db->prepare("UPDATE users SET name = ?, phone = ?, district = ?, updated_at = NOW() WHERE id = ?");
+        $stmt_u->execute([$name, $phone, $district, $farmer_id]);
+
+        // Update active session variables
+        $_SESSION['user_name'] = $name;
+        $_SESSION['user_district'] = $district;
+
+        // 2. Upsert farmer_profiles table
+        $stmt_check = $db->prepare("SELECT id FROM farmer_profiles WHERE user_id = ? LIMIT 1");
+        $stmt_check->execute([$farmer_id]);
+        $exists = $stmt_check->fetch();
+
+        if ($exists) {
+            $stmt_fp = $db->prepare("UPDATE farmer_profiles SET farm_name = ?, location = ?, primary_crops = ?, updated_at = NOW() WHERE user_id = ?");
+            $stmt_fp->execute([$farm_name, $location, $primary_crops, $farmer_id]);
+        } else {
+            $stmt_fp = $db->prepare("INSERT INTO farmer_profiles (user_id, farm_name, location, primary_crops, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())");
+            $stmt_fp->execute([$farmer_id, $farm_name, $location, $primary_crops]);
+        }
+
+        $db->commit();
+        jsonResponse(true, [], 'Farmer profile updated successfully!');
+    } catch (PDOException $e) {
+        if ($db->inTransaction()) {
+            $db->rollBack();
+        }
+        jsonResponse(false, [], 'Failed to update farmer profile details.', 500);
     }
 
 } else {
