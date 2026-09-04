@@ -161,16 +161,25 @@ foreach ($testCases as $idx => $tc) {
 // Test 3: AI Broker Agent Multi-Step Execution (TASK-055)
 // -----------------------------------------------------------------------------
 echo "\n3. Testing AI Broker Agent Multi-Step Matching (TASK-055)...\n";
+if ($testDb instanceof PDO && !($testDb instanceof TestMockDb)) {
+    // Reset test order to pending to ensure test idempotency across multiple runs
+    $testDb->exec("UPDATE order_requests SET status = 'pending' WHERE id = 1");
+    $testDb->exec("UPDATE harvest_listings SET status = 'available' WHERE id = 1");
+    $testDb->exec("DELETE FROM order_matches WHERE order_id = 1");
+}
+
 $brokerAgent = new BrokerAgent($testDb, $gemini);
 $matchResult = $brokerAgent->matchOrder(1);
 
 assertTest($matchResult['success'] === true, "Broker Agent matched order successfully");
 assertTest($matchResult['matched'] === true, "Matched state is true");
-assertTest(!empty($matchResult['match']['farmer_name']), "Match contains farmer name ('{$matchResult['match']['farmer_name']}')");
+assertTest(!empty($matchResult['match']['farmer_name']), "Match contains farmer name ('" . ($matchResult['match']['farmer_name'] ?? '') . "')");
 assertTest(!empty($matchResult['match']['agent_reasoning']), "Match contains explainable AI reasoning");
-echo "     -> Matched Farmer: {$matchResult['match']['farmer_name']} ({$matchResult['match']['farmer_district']})\n";
-echo "     -> Matched Price: Rs. {$matchResult['match']['matched_price']}/kg\n";
-echo "     -> AI Reasoning: {$matchResult['match']['agent_reasoning']}\n";
+if (!empty($matchResult['match'])) {
+    echo "     -> Matched Farmer: {$matchResult['match']['farmer_name']} ({$matchResult['match']['farmer_district']})\n";
+    echo "     -> Matched Price: Rs. {$matchResult['match']['matched_price']}/kg\n";
+    echo "     -> AI Reasoning: {$matchResult['match']['agent_reasoning']}\n";
+}
 
 // Summary
 echo "\n=======================================================\n";

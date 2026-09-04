@@ -514,3 +514,12 @@ h3 { font-size: 1.25rem; }
 
 .trend-up { color: #198754; }
 .trend-down { color: #DC3545; }
+
+/* Override Bootstrap Primary Colors */
+.bg-primary {
+    background-color: var(--clr-primary) !important;
+}
+
+.text-primary {
+    color: var(--clr-primary) !important;
+}

@@ -29,7 +29,7 @@ jobs:
       - name: Check Security Standards (Pattern Match)
         run: |
           echo "Checking for raw SQL concatenation..."
-          if grep -rni "SELECT .*'" ./api ./auth ./farmer ./business ./admin; then
+          if grep -rnE '(SELECT|INSERT INTO|UPDATE|DELETE FROM)[^;]*\.[[:space:]]*\$' ./api ./auth ./farmer ./business ./admin; then
             echo "::error::Possible raw SQL concatenation found. Use PDO prepared statements."
             exit 1
           fi
@@ -47,3 +47,46 @@ jobs:
               echo "::warning file=$file::Missing auth_check.php inclusion in protected file."
             fi
           done
+
+  test:
+    name: End-to-End AI Agent Tests
+    runs-on: ubuntu-latest
+    needs: lint
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: agrisync
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo, pdo_mysql, curl, json
+
+      - name: Configure Application Environment
+        run: |
+          cp config/constants.example.php config/constants.php
+          sed -i "s/define('DB_PASS', '');/define('DB_PASS', 'rootpassword');/g" config/constants.php
+          sed -i "s/define('DB_HOST', 'localhost');/define('DB_HOST', '127.0.0.1');/g" config/constants.php
+
+      - name: Setup Database Schema & Seed Data
+        run: |
+          mysql -h 127.0.0.1 -u root -prootpassword agrisync < sql/schema.sql
+          mysql -h 127.0.0.1 -u root -prootpassword agrisync < sql/seed.sql
+
+      - name: Run AI Agent Test Suite
+        run: php tests/test_agents.php

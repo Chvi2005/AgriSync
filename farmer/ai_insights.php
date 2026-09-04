@@ -45,6 +45,7 @@ try {
 }
 
 require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../includes/navbar.php';
 ?>
 
 <div class="d-flex" style="min-height: 100vh;">
@@ -67,7 +68,7 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
                 <div class="mt-3 mt-md-0">
                     <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">
-                        <i class="bi bi-stars me-1"></i> Powered by Google Gemini 1.5 Flash
+                        <i class="bi bi-stars me-1"></i> Powered by Google Gemini 2.5 Flash
                     </span>
                 </div>
             </div>
@@ -93,17 +94,9 @@ require_once __DIR__ . '/../includes/header.php';
                                     <span class="input-group-text bg-light border-end-0 rounded-start-3"><i class="bi bi-tree text-success"></i></span>
                                     <select class="form-select border-start-0 rounded-end-3" id="cropType" name="crop_type" required>
                                         <option value="" disabled>Select target crop...</option>
-                                        <option value="Tomato" selected>Tomato</option>
-                                        <option value="Carrot">Carrot</option>
-                                        <option value="Big Onion">Big Onion</option>
-                                        <option value="Bell Pepper">Bell Pepper</option>
-                                        <option value="Potato">Potato</option>
-                                        <option value="Cabbage">Cabbage</option>
-                                        <option value="Leeks">Leeks</option>
-                                        <option value="Green Beans">Green Beans</option>
-                                        <option value="Green Chili">Green Chili</option>
-                                        <option value="Banana">Banana</option>
-                                        <option value="Papaya">Papaya</option>
+                                        <?php foreach (AGRISYNC_CROPS as $c): ?>
+                                            <option value="<?= $c ?>" <?= $c === 'Tomato' ? 'selected' : '' ?>><?= $c ?></option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
                             </div>
@@ -303,9 +296,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                 });
 
-                const res = await response.json();
+                const rawText = await response.text();
+                let res;
+                try {
+                    res = JSON.parse(rawText);
+                } catch (parseErr) {
+                    throw new Error(`Server returned unexpected response (HTTP ${response.status}).`);
+                }
 
-                if (res.success && res.data && res.data.forecast) {
+                if (res && res.success && res.data && res.data.forecast) {
                     const f = res.data.forecast;
                     const stats = res.data.market_stats || {};
 
@@ -351,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     loadingState.classList.remove('d-flex');
                     resultState.classList.remove('d-none');
                 } else {
-                    throw new Error(res.error || 'Failed to fetch AI forecast.');
+                    throw new Error(res?.error || 'Failed to fetch AI forecast.');
                 }
             } catch (err) {
                 alert('Error running AI demand prediction: ' + err.message);

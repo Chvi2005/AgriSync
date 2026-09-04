@@ -23,7 +23,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <!-- Brand Logo -->
         <a class="navbar-brand d-flex align-items-center gap-2 fw-bold fs-4" href="<?= $app_url ?>/index.php">
             <span class="bg-white text-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 34px; height: 34px;">
-                <i class="bi bi-sprout"></i>
+                <i class="bi bi-flower1"></i>
             </span>
             <span>AgriSync</span>
         </a>

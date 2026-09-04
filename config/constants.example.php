@@ -11,11 +11,28 @@ define('DB_CHARSET', 'utf8mb4');
 
 // Google Gemini AI Configuration
 define('GEMINI_API_KEY', 'your-gemini-api-key-here');
-define('GEMINI_MODEL', 'gemini-1.5-flash');
+define('GEMINI_MODEL', 'gemini-2.5-flash');
 define('GEMINI_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/');
+
+// Dynamic Application URL Resolution
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost:8000';
+$docRoot = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT'] ?? '');
+$appDir = str_replace('\\', '/', dirname(__DIR__));
+$subDir = '';
+if (!empty($docRoot) && str_starts_with($appDir, $docRoot)) {
+    $subDir = substr($appDir, strlen($docRoot));
+}
+define('APP_URL', rtrim($protocol . $host . $subDir, '/'));
 
 // Application Settings
 define('APP_NAME', 'AgriSync');
-define('APP_URL', 'http://localhost/agrisync');
 define('FAIR_TRADE_MIN_MULTIPLIER', 1.2); // Minimum 20% margin above base cost
 define('APP_ENV', 'development'); // 'development' or 'production'
+
+// Standardized Crop Catalog
+define('AGRISYNC_CROPS', [
+    'Tomato', 'Carrot', 'Big Onion', 'Bell Pepper', 'Potato', 
+    'Cabbage', 'Leeks', 'Green Beans', 'Green Chili', 'Banana', 
+    'Papaya', 'Pumpkin', 'Brinjal'
+]);

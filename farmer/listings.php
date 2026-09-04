@@ -54,6 +54,7 @@ try {
 }
 
 require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../includes/navbar.php';
 ?>
 
 <div class="d-flex" style="min-height: 100vh;">
@@ -179,6 +180,7 @@ require_once __DIR__ . '/../includes/header.php';
                                         if ($st === 'available') $badge = 'bg-success-subtle text-success';
                                         if ($st === 'matched') $badge = 'bg-warning-subtle text-warning';
                                         if ($st === 'sold') $badge = 'bg-info-subtle text-info';
+                                        if ($st === 'expired') $badge = 'bg-danger-subtle text-danger';
                                         $est_val = (float)$row['quantity_kg'] * (float)$row['price_per_kg'];
                                     ?>
                                     <tr>

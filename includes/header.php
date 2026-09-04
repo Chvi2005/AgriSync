@@ -27,6 +27,18 @@ $app_url = defined('APP_URL') ? APP_URL : '';
     <meta name="csrf-token" content="<?= htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8') ?>">
     <meta name="theme-color" content="#2D6A4F">
 
+    <!-- Open Graph & Social Sharing Meta Tags (TASK-100) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<?= $page_title_display ?>">
+    <meta property="og:description" content="AI-Powered Agricultural Supply Chain Platform connecting Sri Lankan farmers with verified commercial buyers.">
+    <meta property="og:image" content="<?= $app_url ?>/assets/img/og-preview.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= $page_title_display ?>">
+    <meta name="twitter:description" content="AI-Powered Agricultural Supply Chain Platform connecting Sri Lankan farmers with verified commercial buyers.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>">
+
     <title><?= $page_title_display ?></title>
 
     <!-- Google Fonts: Inter -->

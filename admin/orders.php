@@ -162,6 +162,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateStatusModal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
     const updateStatusForm = document.getElementById('updateStatusForm');
 
+    function getStatusBadgeClass(status) {
+        switch(status.toLowerCase()) {
+            case 'pending': return 'badge badge-pending';
+            case 'matching': return 'badge badge-matching';
+            case 'matched': return 'badge badge-matched';
+            case 'accepted': return 'badge badge-accepted';
+            case 'fulfilled': return 'badge badge-delivered';
+            case 'completed': return 'badge badge-delivered';
+            case 'cancelled': return 'badge badge-cancelled';
+            case 'rejected': return 'badge badge-cancelled';
+            default: return 'badge badge-status-secondary';
+        }
+    }
+
     async function loadAdminOrders() {
         const query = new URLSearchParams({
             action: 'get_all_orders',

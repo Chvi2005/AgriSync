@@ -17,7 +17,7 @@ $user_id = (int) ($_SESSION['user_id'] ?? 0);
 $error = '';
 $success = '';
 
-$crops = ['Tomato', 'Carrot', 'Big Onion', 'Bell Pepper', 'Potato', 'Cabbage', 'Leeks', 'Green Beans', 'Green Chili', 'Banana', 'Papaya', 'Pumpkin', 'Brinjal'];
+$crops = AGRISYNC_CROPS;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $crop_type = trim($_POST['crop_type'] ?? '');
@@ -63,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../includes/navbar.php';
 ?>
 
 <div class="d-flex" style="min-height: 100vh;">

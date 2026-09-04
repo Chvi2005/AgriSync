@@ -73,7 +73,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= in_array($current_page, ['marketplace.php', 'place_order.php'], true) ? 'active' : '' ?>" href="<?= $app_url ?>/business/marketplace.php">
+                    <a class="nav-link <?= in_array($current_page, ['browse.php', 'place_order.php'], true) ? 'active' : '' ?>" href="<?= $app_url ?>/business/browse.php">
                         <i class="bi bi-shop"></i>
                         <span>Produce Market</span>
                     </a>
@@ -144,7 +144,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <!-- Quick Branding Badge -->
         <div class="px-3 pb-3">
             <div class="p-3 bg-black bg-opacity-25 rounded-3 text-center border border-white-50 border-opacity-10">
-                <div class="fw-bold text-white extra-small mb-1"><i class="bi bi-sprout text-accent me-1"></i>AgriSync Sri Lanka</div>
+                <div class="fw-bold text-white extra-small mb-1"><i class="bi bi-flower1 text-accent me-1"></i>AgriSync Sri Lanka</div>
                 <div class="text-white-50 extra-small">Smart B2B Agritech</div>
             </div>
         </div>

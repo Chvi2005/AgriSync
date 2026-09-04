@@ -42,9 +42,9 @@ $urgency = sanitize($input['urgency'] ?? 'medium');
 $notes = sanitize($input['notes'] ?? '');
 
 // Validation
-if (empty($crop_type)) {
+if (empty($crop_type) || !in_array($crop_type, AGRISYNC_CROPS, true)) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'Crop type is required.']);
+    echo json_encode(['success' => false, 'error' => 'Please select a valid crop from the catalog.']);
     exit;
 }
 

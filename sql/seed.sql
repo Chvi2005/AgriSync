@@ -1,67 +1,86 @@
--- AgriSync Database Seed Data Script
--- Seed data for instant local setup & demo testing
--- Default password for all demo accounts is: password123
+-- AgriSync Complete Database Seed Data Script (TASK-105 / Issue #80)
+-- Comprehensive seed data for local demo, judging showcase, and end-to-end testing.
+-- Default password for all demo accounts: password123
+-- Password Hash (BCRYPT): $2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
+USE `agrisync`;
 
 -- --------------------------------------------------------
--- Seed Users (Password: password123)
--- Hash: $2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi
+-- 1. Seed Users (Demo Accounts)
 -- --------------------------------------------------------
 INSERT INTO `users` (`id`, `name`, `email`, `password_hash`, `role`, `phone`, `district`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'Bandara Herath', 'farmer@agrisync.lk', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'farmer', '0771234567', 'Nuwara Eliya', 1, NOW(), NOW()),
-(2, 'Somasiri Silva', 'dambulla.farmer@agrisync.lk', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'farmer', '0719876543', 'Dambulla', 1, NOW(), NOW()),
-(3, 'Keells Supermarket Procurement', 'buyer@agrisync.lk', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'business', '0112345678', 'Colombo', 1, NOW(), NOW()),
-(4, 'Cargills Food City Central', 'cargills@agrisync.lk', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'business', '0119876543', 'Gampaha', 1, NOW(), NOW()),
-(5, 'AgriSync System Admin', 'admin@agrisync.lk', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', '0703534431', 'Colombo', 1, NOW(), NOW())
+(1, 'Bandara Herath', 'farmer@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'farmer', '0771234567', 'Nuwara Eliya', 1, NOW(), NOW()),
+(2, 'Somasiri Silva', 'dambulla.farmer@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'farmer', '0719876543', 'Matale', 1, NOW(), NOW()),
+(3, 'Kavinda Perera', 'badulla.farmer@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'farmer', '0765554321', 'Badulla', 1, NOW(), NOW()),
+(4, 'Tharindu Jayasuriya', 'jaffna.farmer@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'farmer', '0783332211', 'Jaffna', 1, NOW(), NOW()),
+(5, 'Keells Supermarket Procurement', 'buyer@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'business', '0112345678', 'Colombo', 1, NOW(), NOW()),
+(6, 'Cargills Food City Central Logistics', 'cargills@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'business', '0119876543', 'Gampaha', 1, NOW(), NOW()),
+(7, 'Ceylon Agro Exports Ltd', 'export@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'business', '0114445566', 'Colombo', 1, NOW(), NOW()),
+(8, 'AgriSync System Admin', 'admin@agrisync.lk', '$2y$12$vRXM.k435qJg/45DKAXVhe985nOTvCCnJJlRyndd2AO/FGPfgQGG2', 'admin', '0703534431', 'Colombo', 1, NOW(), NOW())
+ON DUPLICATE KEY UPDATE `password_hash` = VALUES(`password_hash`), `updated_at` = NOW();
+
+-- --------------------------------------------------------
+-- 2. Seed Farmer Profiles
+-- --------------------------------------------------------
+INSERT INTO `farmer_profiles` (`id`, `user_id`, `farm_name`, `farm_size_acres`, `primary_crops`, `farming_method`, `bank_account_no`, `bank_name`, `bank_branch`, `bio`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Highland Green Haven Farms', 4.50, 'Carrot, Potato, Leek, Cabbage', 'conventional', '8001234567', 'Bank of Ceylon', 'Nuwara Eliya', 'Experienced hill country vegetable producer supplying premium highland crops since 2012.', NOW(), NOW()),
+(2, 2, 'Dambulla Agro Valley', 6.20, 'Tomato, Big Onion, Green Chilli, Brinjal', 'organic', '1009876543', 'People''s Bank', 'Dambulla', 'Dedicated to organic open-field vegetable cultivation and direct wholesale market supply.', NOW(), NOW()),
+(3, 3, 'Ella Highland Organic Fields', 3.00, 'Cabbage, Capsicum, Bean', 'greenhouse', '7003456789', 'Commercial Bank', 'Badulla', 'High-altitude protected greenhouse agriculture focusing on zero pesticide cultivation.', NOW(), NOW()),
+(4, 4, 'Northern Sun Agro Producers', 8.00, 'Red Onion, Chilli, Pumpkin', 'conventional', '6005556677', 'Hatton National Bank', 'Jaffna', 'Large-scale commercial red onion and pumpkin cultivator with automated drip irrigation.', NOW(), NOW())
 ON DUPLICATE KEY UPDATE `updated_at` = NOW();
 
 -- --------------------------------------------------------
--- Seed Harvest Listings
+-- 3. Seed Harvest Listings
 -- --------------------------------------------------------
 INSERT INTO `harvest_listings` (`id`, `farmer_id`, `crop_type`, `quantity_kg`, `price_per_kg`, `harvest_date`, `status`, `created_at`, `updated_at`) VALUES
 (1, 1, 'Carrot', 1500.00, 210.00, DATE_ADD(CURRENT_DATE, INTERVAL 3 DAY), 'available', NOW(), NOW()),
 (2, 1, 'Potato', 2500.00, 180.00, DATE_ADD(CURRENT_DATE, INTERVAL 5 DAY), 'available', NOW(), NOW()),
 (3, 2, 'Tomato', 800.00, 240.00, DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY), 'matched', NOW(), NOW()),
 (4, 2, 'Leek', 1200.00, 195.00, DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY), 'available', NOW(), NOW()),
-(5, 1, 'Cabbage', 900.00, 160.00, DATE_SUB(CURRENT_DATE, INTERVAL 2 DAY), 'sold', NOW(), NOW())
+(5, 1, 'Cabbage', 900.00, 160.00, DATE_SUB(CURRENT_DATE, INTERVAL 2 DAY), 'sold', NOW(), NOW()),
+(6, 3, 'Capsicum', 650.00, 320.00, DATE_ADD(CURRENT_DATE, INTERVAL 4 DAY), 'available', NOW(), NOW()),
+(7, 4, 'Red Onion', 3000.00, 290.00, DATE_ADD(CURRENT_DATE, INTERVAL 6 DAY), 'available', NOW(), NOW())
 ON DUPLICATE KEY UPDATE `updated_at` = NOW();
 
 -- --------------------------------------------------------
--- Seed Order Requests
+-- 4. Seed Order Requests (Commercial Buyer Pre-Orders)
 -- --------------------------------------------------------
 INSERT INTO `order_requests` (`id`, `business_id`, `crop_type`, `quantity_kg`, `max_price`, `delivery_date`, `urgency`, `status`, `notes`, `created_at`, `updated_at`) VALUES
-(1, 3, 'Carrot', 1000.00, 230.00, DATE_ADD(CURRENT_DATE, INTERVAL 4 DAY), 'high', 'matching', 'Need fresh Nuwara Eliya carrots for retail store distribution.', NOW(), NOW()),
-(2, 3, 'Tomato', 800.00, 250.00, DATE_ADD(CURRENT_DATE, INTERVAL 3 DAY), 'medium', 'matched', 'Grade A tomatoes required for salad section.', NOW(), NOW()),
-(3, 4, 'Leek', 600.00, 200.00, DATE_ADD(CURRENT_DATE, INTERVAL 8 DAY), 'low', 'pending', 'Direct farm supply preferred.', NOW(), NOW()),
-(4, 4, 'Cabbage', 900.00, 175.00, CURRENT_DATE, 'high', 'fulfilled', 'Delivered to Gampaha warehouse.', NOW(), NOW())
+(1, 5, 'Carrot', 1000.00, 230.00, DATE_ADD(CURRENT_DATE, INTERVAL 4 DAY), 'high', 'matching', 'Need fresh Nuwara Eliya carrots for retail store distribution.', NOW(), NOW()),
+(2, 5, 'Tomato', 800.00, 250.00, DATE_ADD(CURRENT_DATE, INTERVAL 3 DAY), 'medium', 'matched', 'Grade A tomatoes required for salad retail section.', NOW(), NOW()),
+(3, 6, 'Leek', 600.00, 200.00, DATE_ADD(CURRENT_DATE, INTERVAL 8 DAY), 'low', 'pending', 'Direct farm supply preferred for Colombo distribution centers.', NOW(), NOW()),
+(4, 6, 'Cabbage', 900.00, 175.00, CURRENT_DATE, 'high', 'fulfilled', 'Delivered to Gampaha centralized warehouse.', NOW(), NOW()),
+(5, 7, 'Red Onion', 2500.00, 310.00, DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY), 'high', 'matching', 'Export grade cured red onions for Maldives sea container shipping.', NOW(), NOW())
 ON DUPLICATE KEY UPDATE `updated_at` = NOW();
 
 -- --------------------------------------------------------
--- Seed Order Matches
+-- 5. Seed Order Matches (AI Broker Autonomous Matches)
 -- --------------------------------------------------------
 INSERT INTO `order_matches` (`id`, `order_id`, `listing_id`, `farmer_id`, `business_id`, `matched_price`, `agent_reasoning`, `confidence_score`, `status`, `created_at`, `updated_at`) VALUES
-(1, 2, 3, 2, 3, 240.00, 'AI Broker matched Keells Tomato pre-order #2 with Somasiri Silva harvest listing #3. Price of Rs. 240/kg is within Rs. 250/kg max budget and provides a 22% margin above base cost.', 96, 'accepted', NOW(), NOW()),
-(2, 4, 5, 1, 4, 160.00, 'AI Broker matched Cargills Cabbage order #4 with Bandara Herath listing #5. Order fulfilled and verified upon delivery.', 98, 'completed', NOW(), NOW())
+(1, 2, 3, 2, 5, 240.00, 'Gemini AI Broker matched Keells Tomato pre-order #2 with Somasiri Silva harvest listing #3. Price of Rs. 240/kg is within buyer Rs. 250/kg max budget and provides a 22% margin above base production cost. Transit route via Dambulla-Kurunegala highway optimizes logistics.', 96, 'accepted', NOW(), NOW()),
+(2, 4, 5, 1, 6, 160.00, 'Gemini AI Broker matched Cargills Cabbage order #4 with Bandara Herath listing #5. Order fulfilled, quality checked, and verified upon warehouse intake.', 98, 'completed', NOW(), NOW())
 ON DUPLICATE KEY UPDATE `updated_at` = NOW();
 
 -- --------------------------------------------------------
--- Seed Agent Logs
+-- 6. Seed Agent Audit Logs (Multi-Agent System)
 -- --------------------------------------------------------
 INSERT INTO `agent_logs` (`id`, `agent_type`, `order_id`, `action_step`, `log_data`, `created_at`, `updated_at`) VALUES
-(1, 'demand_prediction', 1, 'Analyzed Western Province demand spike for carrots ahead of holiday weekend', '{"crop": "Carrot", "predicted_demand_kg": 4500, "confidence": 0.92}', NOW(), NOW()),
-(2, 'broker', 2, 'Matched buyer order #2 with farmer #2 harvest yield #3', '{"match_score": 96, "fair_trade_validated": true}', NOW(), NOW()),
-(3, 'logistics', 2, 'Negotiated transport route from Dambulla to Colombo distribution hub', '{"distance_km": 148, "est_delivery_hours": 3.5}', NOW(), NOW())
+(1, 'demand_prediction', 1, 'Analyzed Western Province demand spike for carrots ahead of seasonal holiday weekend', '{"crop": "Carrot", "predicted_demand_kg": 4500, "confidence": 0.92, "macro_trend": "High Demand"}', NOW(), NOW()),
+(2, 'broker', 2, 'Matched buyer order #2 with farmer #2 harvest yield #3', '{"match_score": 96, "fair_trade_validated": true, "farmer_margin_gain_pct": 22}', NOW(), NOW()),
+(3, 'logistics', 2, 'Negotiated transport route from Dambulla to Colombo distribution hub', '{"distance_km": 148, "est_delivery_hours": 3.5, "co2_emission_saved_kg": 42.6}', NOW(), NOW()),
+(4, 'pricing', 5, 'Calculated Fair Trade Floor Price index for Red Onion across Jaffna and Dambulla markets', '{"suggested_floor_rs": 280.00, "market_ceiling_rs": 340.00, "volatility_score": 0.14}', NOW(), NOW())
 ON DUPLICATE KEY UPDATE `updated_at` = NOW();
 
 -- --------------------------------------------------------
--- Seed Notifications
+-- 7. Seed System In-App Notifications
 -- --------------------------------------------------------
 INSERT INTO `notifications` (`id`, `user_id`, `message`, `link`, `is_read`, `created_at`, `updated_at`) VALUES
 (1, 1, 'Welcome to AgriSync! List your harvest yield to start receiving buyer matches.', '/farmer/listings.php', 1, NOW(), NOW()),
-(2, 3, 'Your pre-order for 800kg Tomatoes has been matched with a farmer in Dambulla!', '/business/matches.php', 0, NOW(), NOW()),
-(3, 2, 'New buyer match proposal received for your Tomato harvest!', '/farmer/orders.php', 0, NOW(), NOW())
+(2, 5, 'Your pre-order for 800kg Tomatoes has been matched with a farmer in Dambulla!', '/business/matches.php', 0, NOW(), NOW()),
+(3, 2, 'New buyer match proposal received for your Tomato harvest!', '/farmer/offers.php', 0, NOW(), NOW()),
+(4, 8, 'System Health Check: 4 autonomous Gemini AI agent workers active and operational.', '/admin/agent_logs.php', 0, NOW(), NOW())
 ON DUPLICATE KEY UPDATE `updated_at` = NOW();
 
 COMMIT;
