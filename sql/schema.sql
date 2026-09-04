@@ -22,12 +22,15 @@ CREATE TABLE IF NOT EXISTS `users` (
   `phone` varchar(20) DEFAULT NULL,
   `district` varchar(50) DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `reset_token` varchar(64) DEFAULT NULL,
+  `reset_expires` datetime DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_unique` (`email`),
   KEY `role_index` (`role`),
-  KEY `district_index` (`district`)
+  KEY `district_index` (`district`),
+  KEY `reset_token_index` (`reset_token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
