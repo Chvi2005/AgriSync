@@ -127,6 +127,7 @@ require_once __DIR__ . '/../includes/header.php';
                     <div class="mb-4">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <label for="passwordInput" class="form-label small fw-semibold text-muted mb-0">Password</label>
+                            <a href="forgot_password.php" class="text-success small text-decoration-none">Forgot password?</a>
                         </div>
                         <div class="input-group">
                             <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock"></i></span>
