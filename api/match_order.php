@@ -6,6 +6,7 @@
  */
 
 header('Content-Type: application/json; charset=UTF-8');
+@set_time_limit(60);
 
 require_once __DIR__ . '/../config/constants.php';
 require_once __DIR__ . '/../config/session.php';

@@ -2,7 +2,7 @@
 /**
  * AgriSync — AI Demand Prediction Agent (TASK-064 & TASK-065)
  * Analyzes agricultural cycles (Maha/Yala), historical platform orders, supply volume, 
- * and regional agro-ecological zones in Sri Lanka using Gemini 1.5 Flash.
+ * and regional agro-ecological zones in Sri Lanka using Gemini 2.5 Flash.
  */
 
 if (!defined('APP_NAME')) {
@@ -145,29 +145,33 @@ class DemandAgent {
             . "- actionable_advice (string: 2-3 sentences of clear actionable guidance for farmers on planting, staggered harvesting, or direct contract opportunities)\n"
             . "- recommended_crops_next_cycle (array of 3 complementary or high-yield crop names suitable for {$context['target_district']})";
 
-        if ($this->gemini->isConfigured()) {
-            $response = $this->gemini->generateJSON($prompt, [
-                'systemInstruction' => $systemInstruction,
-                'temperature' => 0.2
-            ]);
+        try {
+            if ($this->gemini->isConfigured()) {
+                $response = $this->gemini->generateJSON($prompt, [
+                    'systemInstruction' => $systemInstruction,
+                    'temperature' => 0.2
+                ]);
 
-            if ($response['success'] && !empty($response['data']['predicted_demand_level'])) {
-                $data = $response['data'];
-                return [
-                    'predicted_demand_level' => (string) $data['predicted_demand_level'],
-                    'confidence_score' => (int) ($data['confidence_score'] ?? 88),
-                    'market_trend' => (string) ($data['market_trend'] ?? 'Rising'),
-                    'predicted_price_range' => $data['predicted_price_range'] ?? ['min' => 150.0, 'max' => 220.0, 'currency' => 'LKR'],
-                    'key_factors' => (array) ($data['key_factors'] ?? [
-                        "Current {$context['season']} cultivation patterns",
-                        "High commercial hospitality demand in urban hubs",
-                        "Transportation proximity to regional economic centers"
-                    ]),
-                    'actionable_advice' => (string) ($data['actionable_advice'] ?? "Stagger harvest schedule across 2-week intervals to capture peak market rates."),
-                    'recommended_crops_next_cycle' => (array) ($data['recommended_crops_next_cycle'] ?? ['Bell Pepper', 'Cabbage', 'Beans']),
-                    'used_gemini' => true
-                ];
+                if ($response['success'] && !empty($response['data']['predicted_demand_level'])) {
+                    $data = $response['data'];
+                    return [
+                        'predicted_demand_level' => (string) $data['predicted_demand_level'],
+                        'confidence_score' => (int) ($data['confidence_score'] ?? 88),
+                        'market_trend' => (string) ($data['market_trend'] ?? 'Rising'),
+                        'predicted_price_range' => $data['predicted_price_range'] ?? ['min' => 150.0, 'max' => 220.0, 'currency' => 'LKR'],
+                        'key_factors' => (array) ($data['key_factors'] ?? [
+                            "Current {$context['season']} cultivation patterns",
+                            "High commercial hospitality demand in urban hubs",
+                            "Transportation proximity to regional economic centers"
+                        ]),
+                        'actionable_advice' => (string) ($data['actionable_advice'] ?? "Stagger harvest schedule across 2-week intervals to capture peak market rates."),
+                        'recommended_crops_next_cycle' => (array) ($data['recommended_crops_next_cycle'] ?? ['Bell Pepper', 'Cabbage', 'Beans']),
+                        'used_gemini' => true
+                    ];
+                }
             }
+        } catch (Throwable $e) {
+            error_log('DemandAgent Gemini prediction error (falling back to KB): ' . $e->getMessage());
         }
 
         // Domain Rule-Based Knowledge Fallback

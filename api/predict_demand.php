@@ -6,6 +6,7 @@
  */
 
 header('Content-Type: application/json; charset=UTF-8');
+@set_time_limit(60);
 
 require_once __DIR__ . '/../config/constants.php';
 require_once __DIR__ . '/../config/session.php';
@@ -17,7 +18,7 @@ require_once __DIR__ . '/../agents/demand_agent.php';
 $cropType = $_GET['crop_type'] ?? null;
 $district = $_GET['district'] ?? null;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $rawInput = file_get_contents('php://input');
     $inputData = json_decode($rawInput, true);
 

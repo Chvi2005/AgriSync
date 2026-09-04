@@ -6,4 +6,8 @@ backups/*.sql.gz
 *.log
 .DS_Store
 .vscode/
-
+create_all_issues.php
+create_issues.php
+setup_github.php
+github_issue_format.md
+implementation_plan.md

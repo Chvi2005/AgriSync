@@ -1,5 +1,10 @@
 -- AgriSync Core Database Schema
 -- Follows strict guidelines: snake_case, plural tables, standard timestamps, foreign keys with cascade
+CREATE DATABASE IF NOT EXISTS `agrisync`
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
+USE `agrisync`;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -26,6 +31,29 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
+-- Table structure for table `farmer_profiles`
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `farmer_profiles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `farm_name` varchar(150) DEFAULT NULL,
+  `farm_size_acres` decimal(6,2) DEFAULT NULL,
+  `primary_crops` text DEFAULT NULL,
+  `farming_method` enum('organic','conventional','greenhouse','hydroponic') DEFAULT 'conventional',
+  `bank_account_no` varchar(50) DEFAULT NULL,
+  `bank_name` varchar(100) DEFAULT NULL,
+  `bank_branch` varchar(100) DEFAULT NULL,
+  `bio` text DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id_unique` (`user_id`),
+  CONSTRAINT `fk_farmer_profile_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- --------------------------------------------------------
 -- Table structure for table `harvest_listings`
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `harvest_listings` (
@@ -35,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `harvest_listings` (
   `quantity_kg` decimal(10,2) NOT NULL,
   `price_per_kg` decimal(10,2) NOT NULL,
   `harvest_date` date NOT NULL,
-  `status` enum('available','matched','sold') NOT NULL DEFAULT 'available',
+  `status` enum('available','matched','sold','expired') NOT NULL DEFAULT 'available',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
